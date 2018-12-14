@@ -1,0 +1,18 @@
+Java Security Permission:
+
+add to config for both parameter and VM option:
+
+    -Djava.security.policy=policy.all -Djava.rmi.server.useCodebaseOnly=false
+
+
+Dependencies:
+
+    $RIVER_HOME/lib/jsk-lib.jar
+
+    $RIVER_HOME/lib/jsk-platform.jar
+
+    $RIVER_HOME/lib/outrigger.jar
+
+    $RIVER_HOME/lib/reggie.jar
+
+$RIVER_HOME/lib-dl/reggie-dl.jar
