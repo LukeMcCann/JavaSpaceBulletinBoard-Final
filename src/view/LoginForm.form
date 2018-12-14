@@ -25,6 +25,7 @@
         </constraints>
         <properties>
           <columns value="20"/>
+          <toolTipText value="Usernames must be between 3 and 20 characters."/>
         </properties>
       </component>
       <component id="80f1e" class="javax.swing.JLabel" binding="lbl_password">
@@ -43,7 +44,9 @@
           </grid>
           <gridbag weightx="0.0" weighty="0.0"/>
         </constraints>
-        <properties/>
+        <properties>
+          <toolTipText value="Passwords must be between 6 and 25 characters."/>
+        </properties>
       </component>
       <component id="ad98e" class="javax.swing.JButton" binding="btn_login">
         <constraints>

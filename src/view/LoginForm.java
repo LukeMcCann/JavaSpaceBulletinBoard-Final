@@ -47,5 +47,15 @@ public class LoginForm extends JFrame
                         new String(tf_password.getPassword()));
             }
         });
+
+        btn_login.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent)
+            {
+                controller.loginUser(tf_username.getText(),
+                        new String(tf_password.getPassword()));
+            }
+        });
     }
 }
