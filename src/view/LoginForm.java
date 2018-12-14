@@ -44,7 +44,7 @@ public class LoginForm extends JFrame
             public void actionPerformed(ActionEvent actionEvent)
             {
                 controller.registerUser(tf_username.getText(),
-                        tf_password.getPassword().toString());
+                        new String(tf_password.getPassword()));
             }
         });
     }

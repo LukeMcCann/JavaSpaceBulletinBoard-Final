@@ -7,7 +7,7 @@ import util.SpaceUtils;
 
 public class TransactionBuilder
 {
-    private static final int DEFAULT_LEASE= 3000;
+    private static final long DEFAULT_LEASE= 3000l;
 
     private TransactionBuilder() {}
 
@@ -18,7 +18,7 @@ public class TransactionBuilder
      *
      * @Reference JavaSpaces Principles, Patterns and Practice
      */
-    public static Transaction getTransaction(int lease)
+    public static Transaction getTransaction(long lease)
     {
         // get manager
         TransactionManager tm =
@@ -35,7 +35,7 @@ public class TransactionBuilder
             System.err.println("Failed to create transaction!");
             e.printStackTrace();
         }
-        return (Transaction) trc;
+        return trc.transaction;
     }
 
     public static Transaction getTransaction() {return getTransaction(DEFAULT_LEASE);}

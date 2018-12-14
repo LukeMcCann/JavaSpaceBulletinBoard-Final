@@ -15,7 +15,7 @@ public class UserUtils
     private static UserUtils userutils;
     private static SpaceSearcher searcher = SpaceSearcher.getSpaceSearcher();
     private static final JavaSpace05 space = SpaceUtils.getSpace();
-    private static final int ONE_MONTH = 1000*60*60*24*7*4;
+    private static final long ONE_MONTH = 2629746000l;
 
 
     private  UserUtils() {}

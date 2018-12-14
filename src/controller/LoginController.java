@@ -33,8 +33,10 @@ public class LoginController
                 {
                     // continue
                     String confirmDialogResponse = confirmPassword();
-                    if(StringUtils.isNotBlank(confirmDialogResponse) &&
-                            password.equals(confirmDialogResponse))
+
+//                    System.out.println("Dialog: " + confirmDialogResponse);
+//                    System.out.println("Password: "+password);
+                    if(password.equals(confirmDialogResponse))
                     {
                         // passwords match
                         // save user to space
@@ -44,6 +46,7 @@ public class LoginController
                             //TODO: encrypt password
                             UserEntry user = new UserEntry();
                             user.setUsername(username);
+                            user.setPassword(password);
 
                             if(user.getSecureUsername().length() > 3)
                             {
@@ -56,9 +59,9 @@ public class LoginController
                                 loginForm.dispose();
 
                                 // Create MainForm
-                                UserEntry debug = (UserEntry) space.readIfExists(user, null, 3000);
-                                System.out.println("User: " + debug +" Successfully added!");
-                                System.out.println("Main Form Created!");
+//                                UserEntry debug = (UserEntry) space.readIfExists(user, null, 3000);
+//                                System.out.println("User: " + debug +" Successfully added!");
+//                                System.out.println("Main Form Created!");
                             }
                             else
                             {
@@ -111,18 +114,16 @@ public class LoginController
     private String confirmPassword()
     {
         JPasswordField tf_password = new JPasswordField();
-        int confirmResponse = JOptionPane.showConfirmDialog(
-                null, tf_password, "Confirm Password",
+        int okCxl = JOptionPane.showConfirmDialog(null,
+                tf_password, "Confirm Password: ",
                 JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 
-        if (confirmResponse == JOptionPane.CANCEL_OPTION)
+        // Debug: System.out.println("Dialog" + tf_password.getPassword());
+        if (okCxl == JOptionPane.OK_OPTION)
         {
-        JOptionPane.showMessageDialog(loginForm,
-                "Password confirmation cancelled!");
-
+            return new String(tf_password.getPassword());
         }
-
-        return new String(tf_password.getPassword());
+        return null;
     }
 
 }
