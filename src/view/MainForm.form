@@ -15,7 +15,7 @@
           </grid>
         </constraints>
         <properties>
-          <toolTipText value="!"/>
+          <toolTipText value="Select a Topic to join!"/>
         </properties>
         <border type="none"/>
         <children>
@@ -25,7 +25,7 @@
               <showHorizontalLines value="true"/>
               <showVerticalLines value="true"/>
               <surrendersFocusOnKeystroke value="false"/>
-              <toolTipText value="Select a Topic to join!"/>
+              <toolTipText value=""/>
             </properties>
           </component>
         </children>

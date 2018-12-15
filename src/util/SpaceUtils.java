@@ -6,6 +6,10 @@ import net.jini.core.lookup.ServiceTemplate;
 import net.jini.core.transaction.server.TransactionManager;
 import net.jini.space.JavaSpace05;
 
+import javax.swing.*;
+import java.net.ConnectException;
+import java.net.InetAddress;
+
 /**
  * @Author Gary Allen
  *
@@ -17,7 +21,45 @@ import net.jini.space.JavaSpace05;
  */
 public class SpaceUtils
 {
-    private static String DEFAULT_HOSTNAME = "Jarvis-W65-67SC";
+   private static String DEFAULT_HOSTNAME = "Jarvis-W65-67SC";
+   private static InetAddress IP;
+
+    /**
+     * Sets the current Host
+     */
+   public static void setHost(String hostname)
+   {
+       if(hostname.isEmpty())
+       {
+           try
+           {
+               IP = InetAddress.getLocalHost();
+               DEFAULT_HOSTNAME = IP.getHostName();
+           }
+           catch (Exception e)
+           {
+               e.printStackTrace();
+               JOptionPane.showMessageDialog(null,
+                       "Unknown Host!" +
+                               "\n\nHost: " + DEFAULT_HOSTNAME);
+           }
+       }
+       else
+       {
+           DEFAULT_HOSTNAME = hostname;
+       }
+   }
+
+   public static String getHostname()
+   {
+       return DEFAULT_HOSTNAME;
+   }
+
+   public static void setHostname(String host)
+   {
+       DEFAULT_HOSTNAME = host;
+   }
+
 
     /**
      * Get a reference to the space
@@ -26,6 +68,7 @@ public class SpaceUtils
      */
     public static JavaSpace05 getSpace(String hostname)
     {
+        setHost(hostname);
         if(System.getSecurityManager() == null)
         {
             System.setSecurityManager(new SecurityManager());
@@ -47,6 +90,14 @@ public class SpaceUtils
         {
             System.err.println("Error: " + e);
             e.printStackTrace();
+
+            if(e.getClass().equals(ConnectException.class))
+            {
+                JOptionPane.showMessageDialog(null,
+                        "Connection Refused!  " +
+                                "\nPlease ensure a space is running on host before logging in." +
+                                 "\n\nHost: " + hostname + "\nip: " + IP);
+            }
         }
         return space;
     }

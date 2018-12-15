@@ -48,10 +48,11 @@ public class MainForm extends JFrame
         setPreferredSize(new Dimension(500, 750));
         tbl_topicList.setShowHorizontalLines(true);
         tbl_topicList.setShowVerticalLines(true);
+
+        setTableRules();
         getContentPane().add(pnl_main);
         setTitle("BulletinBoard - Logged in as: " + user.getUsername());
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setTableRules();
         pack();
         setVisible(true);
     }
@@ -63,8 +64,11 @@ public class MainForm extends JFrame
         try
         {
             tbl_topicList.setModel(topicsModel);
-            tbl_topicList.removeColumn(tbl_topicList.getColumnModel().getColumn(TOPIC_ID));
-            tbl_topicList.removeColumn(tbl_topicList.getColumnModel().getColumn(OWNER_ID));
+            tbl_topicList.removeColumn(
+                    tbl_topicList.getColumnModel().getColumn(TOPIC_ID));
+
+            tbl_topicList.removeColumn(
+                    tbl_topicList.getColumnModel().getColumn(OWNER_ID));
 
 
             tbl_topicList.setVisible(true);
@@ -92,6 +96,7 @@ public class MainForm extends JFrame
             public void actionPerformed(ActionEvent actionEvent)
             {
                 controller.newTopicButtonPress();
+                controller.refresh(tbl_topicList, TOPIC_ID, OWNER_ID);
             }
         });
 
@@ -100,32 +105,38 @@ public class MainForm extends JFrame
             @Override
             public void actionPerformed(ActionEvent actionEvent)
             {
-                controller.refresh(tbl_topicList, OWNER_ID, TOPIC_ID);
+                controller.refresh(tbl_topicList, TOPIC_ID, OWNER_ID);
             }
         });
 
-        btn_delete.addActionListener(new ActionListener() {
+
+        tbl_topicList.addMouseListener(new MouseAdapter()
+        {
             @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                int selectedRow = tbl_topicList.getSelectedRow();
-                if (selectedRow == -1)
+            public void mouseClicked(MouseEvent e)
+            {
+                super.mouseClicked(e);
+                if(tbl_topicList.getSelectedRow() > -1)
                 {
-                    JOptionPane.showInternalMessageDialog(MainForm.this,
-                            "Failed to delete selectd topic. " + " No topic selected ",
-                            "Delete Topic Failed!",
-                            JOptionPane.ERROR_MESSAGE, null);
+                    int selectedIndex = tbl_topicList.getSelectedRow();
+                    btn_join.setEnabled(true);
+
+                    if(topicsModel.getValueAt(selectedIndex,
+                            OWNER_ID).equals(user.getID()))
+                    {
+                        btn_delete.setEnabled(true);
+                    }
+//                    System.out.println(tbl_topicList.getSelectedRow());
+//                    System.out.println(selectedIndex);
+//                    System.out.println(OWNER_ID + " : " + user.getID() );
                 }
                 else
                 {
-                    UUID topicToDelete =
-                            (UUID) tbl_topicList.getValueAt(
-                                    selectedRow, TOPIC_ID);
-
-                    controller.deleteButtonPress(topicToDelete, selectedRow);
+                    btn_delete.setEnabled(false);
+                    btn_join.setEnabled(false);
                 }
             }
         });
-        //TODO: Row Selection to activate buttons
+
     }
 }
-

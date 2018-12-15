@@ -154,8 +154,5 @@ public class MenuController
 
         table.removeColumn(table.getColumnModel().getColumn(index1));
         table.removeColumn(table.getColumnModel().getColumn(index2));
-
-        JOptionPane.showMessageDialog(mainForm,
-                "Ding!");
     }
 }

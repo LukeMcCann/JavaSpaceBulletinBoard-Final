@@ -6,17 +6,20 @@ import net.jini.space.JavaSpace05;
 import org.apache.commons.lang3.StringUtils;
 import util.SpaceUtils;
 import util.UserUtils;
+import util.error.SpaceExistsError;
 import util.helper.SpaceSearcher;
 import util.security.CipherUtils;
 import view.LoginForm;
 import view.MainForm;
 
 import javax.swing.*;
+import java.util.UUID;
 
 public class LoginController
 {
     private LoginForm loginForm;
     private static final UserUtils userUtils = UserUtils.getUserutils();
+    private static final SpaceExistsError spaceExists = SpaceExistsError.getSpaceExistsError();
     private static SpaceSearcher spaceSearcher = SpaceSearcher.getSpaceSearcher();
 //    private JavaSpace05 space = SpaceUtils.getSpace(); // debugging
 
@@ -24,6 +27,11 @@ public class LoginController
 
     public void registerUser(String username, String password)
     {
+        if(!spaceExists.spaceExists(SpaceUtils.getSpace()))
+        {
+            spaceExists.getSpaceExistsWarning(loginForm,
+                    "");
+        }
         // check text fields are not blank
         if(StringUtils.isNotBlank(username) &&
                 StringUtils.isNotBlank(password))
@@ -51,6 +59,7 @@ public class LoginController
                             // encrypt password
                             UserEntry user = new UserEntry();
                             user.setUsername(username);
+                            user.setID(UUID.randomUUID());
                             user.setSalt(CipherUtils.getSalt(30));
                             user.setPassword(
                                     CipherUtils.generateSecurePassword(
