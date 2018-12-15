@@ -1,5 +1,6 @@
 package util;
 
+import model.DummyUserInTopic;
 import model.TopicEntry;
 import model.UserEntry;
 import net.jini.core.lease.Lease;
@@ -207,6 +208,18 @@ public class TopicUtils
                 }
             }
         }
+    }
+
+    /**
+     * Get a list of all the users currently in a topic
+     *
+     * @param topic - topic to search in
+     *
+     * @return List of all users in that topic
+     */
+    public List<DummyUserInTopic> getAllUsersFromTopic(TopicEntry topic)
+    {
+        return e_searcher.readAllMatchingEntries(space, new DummyUserInTopic(topic));
     }
 
 }

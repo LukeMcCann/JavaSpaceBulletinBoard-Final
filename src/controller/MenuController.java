@@ -1,10 +1,13 @@
 package controller;
 
+import model.DummyTopicDeleted;
+import model.DummyUserInTopic;
 import model.TopicEntry;
 import model.UserEntry;
 import org.apache.commons.lang3.StringUtils;
 import util.TopicUtils;
 import view.MainForm;
+import view.TopicForm;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -162,6 +165,60 @@ public class MenuController
             e.printStackTrace();
         }
     }
+
+    public void joinTopicButtonPress(UUID id)
+    {
+        TopicEntry topic =
+                topicUtils.getTopicByID(id);
+
+        if(topic != null)
+        {
+            joinTopic(topic);
+        }
+        else
+        {
+            JOptionPane.showMessageDialog(mainForm,
+                    "Failed to join topic.  Topic does not exist!");
+        }
+    }
+
+    private void joinTopic(TopicEntry topic)
+    {
+
+        if(userInTopic(topic))
+        {
+            JOptionPane.showMessageDialog(mainForm,
+                    "You are already in this topic.");
+            return;
+        }
+        else
+        {
+            new TopicForm(user, topic);
+        }
+    }
+
+    /**
+     * Iterates through a list of DummyUserInTopic entries checking if any match.
+     *
+     * @param topic - the topic to search for user
+     * @return <code>true</code> if user is found else <code>false</code>
+     */
+    private boolean userInTopic(TopicEntry topic)
+    {
+        List<DummyUserInTopic> users =
+                topicUtils.getAllUsersFromTopic(topic);
+
+        for(DummyUserInTopic user : users)
+        {
+            if(user.getUser().equals(user))
+            {
+                // current user found in topic
+                return true;
+            }
+        }
+        return false;
+    }
+
 
 
     /**

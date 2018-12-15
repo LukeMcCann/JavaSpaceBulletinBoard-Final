@@ -3,6 +3,7 @@ package view;
 import controller.MenuController;
 import model.UserEntry;
 import org.w3c.dom.html.HTMLObjectElement;
+import util.TopicUtils;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -29,6 +30,7 @@ public class MainForm extends JFrame
     private UserEntry user;
     private MenuController controller;
     private DefaultTableModel topicsModel;
+    private TopicUtils topicUtils = TopicUtils.getTopicUtils();
     private static final int OWNER_ID = 2;
     private static final int TOPIC_ID = 3;
     private static DefaultTableCellRenderer dtcr;
@@ -109,6 +111,45 @@ public class MainForm extends JFrame
             }
         });
 
+        btn_join.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent)
+            {
+                int selectedIndex = tbl_topicList.getSelectedRow();
+
+                if(selectedIndex != -1)
+                {
+                    // topic selected
+
+                    UUID topicJoinID = (UUID)
+                            topicsModel.getValueAt(selectedIndex, TOPIC_ID);
+
+                    String title =
+                            topicUtils.getTopicByID(topicJoinID).getTitle();
+
+                    int response = JOptionPane.showConfirmDialog(
+                                MainForm.this,
+                                "Join: " + title + "?",
+                                "Joining: " + title,
+                                JOptionPane.YES_NO_OPTION,
+                                JOptionPane.QUESTION_MESSAGE,
+                                null);
+
+                    if(response == 0)
+                    {
+                        // join
+                        controller.joinTopicButtonPress(topicJoinID);
+                    }
+                }
+                else
+                {
+                    JOptionPane.showMessageDialog(MainForm.this,
+                            "Failed to join topic: " + "None Selected");
+                }
+            }
+        });
+
         /**
          * Listener for deleting a topic
          *
@@ -174,12 +215,11 @@ public class MainForm extends JFrame
                 int selectedIndex =
                         tbl_topicList.getSelectedRow();
 
-                if(selectedIndex > -1)
+                if(selectedIndex != -1)
                 {
                     btn_join.setEnabled(true);
 
-                    if(topicsModel.getValueAt(selectedIndex,
-                            OWNER_ID).equals(user.getID()))
+                    if(topicsModel.getValueAt(selectedIndex, OWNER_ID).equals(user.getID()))
                     {
                         btn_delete.setEnabled(true);
                     }
