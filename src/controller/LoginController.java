@@ -145,7 +145,13 @@ public class LoginController
                         loginForm.setVisible(false);
                         loginForm.dispose();
 
-                        // TODO create new main form
+                        // create new main form
+                        new MainForm(existingUser);
+                    }
+                    else
+                    {
+                        JOptionPane.showMessageDialog(loginForm,
+                                "Incorrect username or password!");
                     }
                 }
                 catch (Exception e)

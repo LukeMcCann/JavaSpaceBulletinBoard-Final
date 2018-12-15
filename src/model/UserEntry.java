@@ -1,10 +1,15 @@
 package model;
 
 import net.jini.core.entry.Entry;
-import util.UserUtils;
 
 import java.util.UUID;
 
+/**
+ *
+ *
+ * @References https://docs.oracle.com/
+ *             javase/7/docs/api/java/util/UUID.html
+ */
 public class UserEntry implements Entry
 {
     public UUID id;
