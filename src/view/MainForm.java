@@ -109,6 +109,60 @@ public class MainForm extends JFrame
             }
         });
 
+        /**
+         * Listener for deleting a topic
+         *
+         * Checks the index and compares user id to the id in the owner column
+         * if the topic exists and the user owns it it is deleted
+         */
+        btn_delete.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent)
+            {
+                int selectedIndex =
+                        tbl_topicList.getSelectedRow();
+
+                System.out.println(selectedIndex);
+                if(selectedIndex != -1)
+                {
+                    if(user.getID().equals(topicsModel.getValueAt(selectedIndex, OWNER_ID)))
+                    {
+                        UUID idToDelete = (UUID) topicsModel.getValueAt(selectedIndex, TOPIC_ID);
+
+                        int response = JOptionPane.showConfirmDialog(MainForm.this,
+                                "Delete topic?",
+                                "Confirm Deletion",
+                                JOptionPane.YES_NO_CANCEL_OPTION,
+                                JOptionPane.QUESTION_MESSAGE, null);
+
+                        if(response == JOptionPane.YES_OPTION)
+                        {
+                            controller.deleteButtonPress(idToDelete, selectedIndex);
+                        }
+                        else
+                        {
+                            JOptionPane.showMessageDialog(MainForm.this,
+                                    "Delete cancelled.");
+                        }
+                    }
+                    else
+                    {
+                        JOptionPane.showMessageDialog(MainForm.this,
+                                "You do not own this topic!");
+                    }
+                }
+                else
+                {
+                    JOptionPane.showInternalMessageDialog(MainForm.this,
+                            "Failed to delete topic.  " +
+                                    "No topic selected",
+                            "Topic Deletion Failed",
+                            JOptionPane.ERROR_MESSAGE, null);
+                }
+            }
+        });
+
 
         tbl_topicList.addMouseListener(new MouseAdapter()
         {
@@ -116,9 +170,12 @@ public class MainForm extends JFrame
             public void mouseClicked(MouseEvent e)
             {
                 super.mouseClicked(e);
-                if(tbl_topicList.getSelectedRow() > -1)
+
+                int selectedIndex =
+                        tbl_topicList.getSelectedRow();
+
+                if(selectedIndex > -1)
                 {
-                    int selectedIndex = tbl_topicList.getSelectedRow();
                     btn_join.setEnabled(true);
 
                     if(topicsModel.getValueAt(selectedIndex,

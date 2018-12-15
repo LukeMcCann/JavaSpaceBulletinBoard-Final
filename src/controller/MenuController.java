@@ -135,10 +135,34 @@ public class MenuController
         }
     }
 
-    public void deleteButtonPress(UUID topicID, int row)
+    public void deleteButtonPress(UUID id, int row)
     {
-        JOptionPane.showMessageDialog(mainForm, "TODO: Implement Delete!");
+        TopicEntry topic =
+                topicUtils.getTopicByID(id);
+        if(topic != null)
+        {
+            deleteTopic(topic);
+        }
+        else
+        {
+            JOptionPane.showMessageDialog(mainForm,
+                    "Failed to delete topic.  Topic may not exist!");
+        }
+
     }
+
+    private void deleteTopic(TopicEntry topic)
+    {
+        try
+        {
+            // delete topic
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
 
     /**
      * Refreshes the topic list.

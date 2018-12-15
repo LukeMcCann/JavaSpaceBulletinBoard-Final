@@ -12,6 +12,12 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
+/**
+ *
+ * @References https://stackoverflow.com
+ *              /questions/30309172/
+ *                  how-to-disable-automatic-focus-on-textfield
+ */
 public class LoginForm extends JFrame
 {
     private JPanel pnl_main;

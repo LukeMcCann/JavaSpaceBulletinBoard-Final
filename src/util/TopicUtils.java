@@ -1,6 +1,7 @@
 package util;
 
 import model.TopicEntry;
+import model.UserEntry;
 import net.jini.core.lease.Lease;
 import net.jini.core.transaction.Transaction;
 import net.jini.core.transaction.TransactionException;
@@ -12,6 +13,7 @@ import util.helper.TransactionBuilder;
 import javax.swing.*;
 import java.rmi.RemoteException;
 import java.util.List;
+import java.util.UUID;
 
 /**
  *
@@ -150,5 +152,61 @@ public class TopicUtils
         return e_searcher.readAllMatchingEntries(space, new TopicEntry());
     }
 
+    /**
+     * Searches for a topic in the space by ID
+     *
+     * @param id - the id to find
+     *
+     * @return the TopicEntry which holds the ID
+     */
+    public TopicEntry getTopicByID(UUID id)
+    {
+        TopicEntry template = new TopicEntry();
+        template.setID(id);
+
+        TopicEntry topic = null;
+
+        try
+        {
+            topic = (TopicEntry)
+                    space.readIfExists(template, null, 3000);
+        }
+        catch(Exception e)
+        {
+            System.err.println(
+                    "Failed to get topic: " + id.toString());
+
+            e.printStackTrace();
+        }
+        return topic;
+    }
+
+    public void delete(TopicEntry topic, UserEntry user)
+    {
+        if(topic.getOwner().equals(user))
+        {
+            // the user is the topic owner
+            if(topic.getID() != null &&
+                    topic.getOwner()!= null &&
+                    topic.getTitle() != null)
+            {
+                try
+                {
+                    Transaction transaction =
+                            TransactionBuilder.getTransaction();
+
+                    space.takeIfExists(topic, transaction, 3000);
+
+                    // TODO: delete all users in topic
+                    // TODO: delete all posts
+
+                }
+                catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
 
 }

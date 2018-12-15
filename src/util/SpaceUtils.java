@@ -48,6 +48,8 @@ public class SpaceUtils
        {
            DEFAULT_HOSTNAME = hostname;
        }
+
+       getSpace();
    }
 
    public static String getHostname()
@@ -68,7 +70,6 @@ public class SpaceUtils
      */
     public static JavaSpace05 getSpace(String hostname)
     {
-        setHost(hostname);
         if(System.getSecurityManager() == null)
         {
             System.setSecurityManager(new SecurityManager());
