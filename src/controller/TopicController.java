@@ -4,6 +4,7 @@ import model.DummyUserInTopic;
 import model.PostEntry;
 import model.TopicEntry;
 import model.UserEntry;
+import org.apache.commons.lang3.StringUtils;
 import util.PostUtils;
 import util.TopicUtils;
 import util.UserUtils;
@@ -35,9 +36,26 @@ public class TopicController
         topicUtils.registerUserTo(user, topic); // regitser user to topic
     }
 
-    public void sendButtonPress(String message)
+    public void sendButtonPress(String content, UserEntry author, UserEntry recipient, TopicEntry topic)
     {
-
+        if(StringUtils.isNotBlank(content) &&
+                author != null &&
+                topic != null)
+        {
+            if(recipient == null)
+            {
+                postUtils.sendPublicMessage(new PostEntry(author, topic, content));
+            }
+            else
+            {
+                // postUtils.sendPrivateMessage(new PostEntry(author, recipient, topic, content);
+            }
+        }
+        else
+        {
+            JOptionPane.showMessageDialog(null,
+                    "Failed to send message!");
+        }
     }
 
     /**

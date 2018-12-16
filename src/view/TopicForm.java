@@ -10,10 +10,13 @@ import util.helper.SpaceSearcher;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.text.BadLocationException;
 import javax.swing.text.DocumentFilter;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class TopicForm extends JFrame
 {
@@ -23,13 +26,13 @@ public class TopicForm extends JFrame
     private JTextArea ta_message;
     private JPanel pnl_buttons;
     private JButton btn_send;
-    private JButton sendPrivateButton;
+    private JButton btn_leave;
     private JTable tbl_postList;
     private JScrollPane srcl_ustList;
 
     private UserEntry user;
     private TopicEntry topic;
-    private static int MAX_MESSAGE_SIZE = 50;
+    private static int MAX_MESSAGE_SIZE = 280;
     private TopicController controller;
 
     private DefaultTableModel postListModel;
@@ -58,6 +61,7 @@ public class TopicForm extends JFrame
         setVisible(true);
 
         listen();
+
     }
 
     private void postListSetup()
@@ -121,16 +125,52 @@ public class TopicForm extends JFrame
         ta_message.setWrapStyleWord(true);
     }
 
-    private void refresh()
+    private UserEntry getSelectedUser()
     {
-        controller.refreshUserModel(
-                usersListModel, tbl_userList, 1);
-        controller.refreshPostModel(
-                postListModel, tbl_postList, 3);
+        UserEntry selectedUser = null;
+        int selectedIndex = tbl_userList.getSelectedRow();
+        if(tbl_userList.getSelectedRow() != -1)
+        {
+            // a user is selected
+            selectedUser = sp_searcher.getUserByUsername(
+                            tbl_userList.getModel().getValueAt(selectedIndex, 0).toString());
+        }
+            return selectedUser;
+    }
+
+    /**
+     * Gets the message from the TextArea removing the TO:
+     *
+     * @param ta - the text area to get from
+     * @return - the standalong message
+     */
+    private String getMessageFromField(JTextArea ta)
+    {
+        String message = null;
+        Pattern pattern = Pattern.compile(";");
+        Matcher matcher = pattern.matcher(ta.getText());
+        if(matcher.find())
+        {
+            message = ta.getText().substring(
+                    matcher.start()+1, ta_message.getText().length());
+
+            System.out.println(message);
+            return message;
+        }
+        return message;
     }
 
     private void listen()
     {
+        btn_send.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent)
+            {
+                String message = ta_message.getText();
+                controller.sendButtonPress(message, user, getSelectedUser(), topic);
+            }
+        });
         /**
          * Limits the character count for messages to 50.
          */
@@ -169,6 +209,7 @@ public class TopicForm extends JFrame
                         // is first selected user
                         selectedUser = sp_searcher.getUserByUsername(
                             tbl_userList.getValueAt(selected, 0).toString());
+
                     }
                     else
                     {
@@ -186,12 +227,12 @@ public class TopicForm extends JFrame
             public void focusGained(FocusEvent e)
             {
                 super.focusGained(e);
-
                 if(ta_message.getText().equals("Write your message..."))
                 {
                     ta_message.setText(null);
                 }
             }
+
 
             @Override
             public void focusLost(FocusEvent e)
@@ -199,10 +240,55 @@ public class TopicForm extends JFrame
                 super.focusLost(e);
                 if(StringUtils.isBlank(ta_message.getText()) ||
                         ta_message.getText().isEmpty() ||
-                        ta_message.getText() == null)
+                        ta_message.getText() == null ||
+                        ta_message.getText().equals("TO: "))
                 {
                     ta_message.setText("Write your message...");
                 }
+            }
+        });
+
+        tbl_userList.addMouseListener(new MouseListener()
+        {
+            @Override
+            public void mouseClicked(MouseEvent mouseEvent)
+            {
+                int selectedIndex = tbl_userList.getSelectedRow();
+                if(tbl_userList.getSelectedRow() != -1)
+                {
+                    // a user is selected
+                    UserEntry selectedUser =
+                            sp_searcher.getUserByUsername(
+                                    tbl_userList.getModel().getValueAt(selectedIndex, 0).toString());
+                    try
+                    {
+                        if(ta_message.getText().equals("Write your message...")) {ta_message.setText(null);}
+                        ta_message.getDocument().insertString(0, "TO: " +
+                                selectedUser.getUsername() +" ; \n", null);
+
+                        tbl_userList.getSelectionModel().clearSelection();
+                    }
+                    catch (BadLocationException be)
+                    {
+                        be.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void mousePressed(MouseEvent mouseEvent) {
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent mouseEvent) {
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent mouseEvent) {
+            }
+
+            @Override
+            public void mouseExited(MouseEvent mouseEvent) {
             }
         });
     }

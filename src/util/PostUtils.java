@@ -3,9 +3,13 @@ package util;
 import model.PostEntry;
 import model.TopicEntry;
 import model.UserEntry;
+import net.jini.core.lease.Lease;
+import net.jini.core.transaction.Transaction;
 import net.jini.space.JavaSpace05;
 import util.helper.EntrySearcher;
+import util.helper.TransactionBuilder;
 
+import javax.swing.*;
 import java.util.Iterator;
 import java.util.List;
 
@@ -13,6 +17,7 @@ public class PostUtils
 {
     private static PostUtils postUtils;
     private static EntrySearcher e_searcher = new EntrySearcher();
+    private static TopicUtils topicUtils = TopicUtils.getTopicUtils();
     private JavaSpace05 space = SpaceUtils.getSpace();
 
     private PostUtils() {}
@@ -22,6 +27,52 @@ public class PostUtils
         if(postUtils != null) return postUtils;
         return postUtils = new PostUtils();
     }
+
+    public Lease sendPublicMessage(PostEntry post)
+    {
+        Lease success = null;
+        if(post == null)
+        {
+            System.err.println("Failed to create post.");
+        }
+        else
+        {
+            try
+            {
+                if(post.getTopic() == null)
+                {
+                    JOptionPane.showMessageDialog(null,
+                            "Topic does not exist!");
+                }
+                else if(post.getAuthor() == null)
+                {
+                    JOptionPane.showMessageDialog(null,
+                            "Author does not exist.");
+                }
+                else
+                {
+                    Transaction transaction =
+                            TransactionBuilder.getTransaction();
+
+                    if(topicUtils.topicExists(post.getTopic(), transaction))
+                    {
+                        success = space.write(post, transaction, Lease.FOREVER);
+                    }
+                    transaction.commit();
+                }
+            }
+            catch(Exception e)
+            {
+                e.printStackTrace();
+            }
+        }
+        return success;
+    }
+
+//    public Lease sendPrivateMessage(PostEntry post, UserEntry recipient)
+//    {
+//
+//    }
 
     /**
      * Gets all posts a user has made in the current topic

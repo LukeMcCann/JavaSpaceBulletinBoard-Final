@@ -23,7 +23,15 @@ public class PostEntry implements Entry
 
     public PostEntry(TopicEntry topic) {this.topic = topic;}
 
-    public PostEntry(UserEntry author, UserEntry recipient, String content)
+    public PostEntry(UserEntry author, TopicEntry topic, String content)
+    {
+        this.topic = topic;
+        this.author = author;
+        this.content = content;
+        generateTimeStamp();
+    }
+
+    public PostEntry(UserEntry author, UserEntry recipient, TopicEntry topic, String content)
     {
 //        this.id = UUID.randomUUID();
         generateTimeStamp();
@@ -31,6 +39,7 @@ public class PostEntry implements Entry
         this.author = author;
         this.recipient = recipient;
         this.content = content;
+        this.topic = topic;
     }
 
     /**

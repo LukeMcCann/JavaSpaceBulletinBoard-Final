@@ -118,7 +118,7 @@ public class TopicUtils
     public Lease addTestTopic(TopicEntry topic) throws RemoteException, TransactionException
     {int THREE_MINUTES = 1000*3; return space.write(topic, null, THREE_MINUTES);}
 
-    private boolean topicExists(TopicEntry topic, Transaction transaction)
+    public boolean topicExists(TopicEntry topic, Transaction transaction)
     {
         TopicEntry template = new TopicEntry();
         template.setTitle(topic.getTitle());
