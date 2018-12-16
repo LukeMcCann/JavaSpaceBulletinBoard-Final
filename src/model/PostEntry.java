@@ -25,7 +25,7 @@ public class PostEntry implements Entry
 
     public PostEntry(UserEntry author, UserEntry recipient, String content)
     {
-        this.id = UUID.randomUUID();
+//        this.id = UUID.randomUUID();
         generateTimeStamp();
 
         this.author = author;

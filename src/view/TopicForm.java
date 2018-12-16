@@ -179,6 +179,32 @@ public class TopicForm extends JFrame
                 }
             }
         });
+
+        ta_message.addFocusListener(new FocusAdapter()
+        {
+            @Override
+            public void focusGained(FocusEvent e)
+            {
+                super.focusGained(e);
+
+                if(ta_message.getText().equals("Write your message..."))
+                {
+                    ta_message.setText(null);
+                }
+            }
+
+            @Override
+            public void focusLost(FocusEvent e)
+            {
+                super.focusLost(e);
+                if(StringUtils.isBlank(ta_message.getText()) ||
+                        ta_message.getText().isEmpty() ||
+                        ta_message.getText() == null)
+                {
+                    ta_message.setText("Write your message...");
+                }
+            }
+        });
     }
 
 }
