@@ -163,19 +163,25 @@ public class MainForm extends JFrame
                 System.out.println(selectedIndex);
                 if(selectedIndex != -1)
                 {
-                    if(user.getID().equals(topicsModel.getValueAt(selectedIndex, OWNER_INDEX)))
+                    if(user.getID().equals(
+                            tbl_topicList.getModel().getValueAt(
+                                    selectedIndex, OWNER_INDEX)))
                     {
-                        UUID idToDelete = (UUID) topicsModel.getValueAt(selectedIndex, TOPIC_INDEX);
+                        String title =
+                                tbl_topicList.getModel().getValueAt(
+                                        selectedIndex, 0).toString();
+
+                        TopicEntry topicToDelete = topicUtils.getTopicByTitle(title);
 
                         int response = JOptionPane.showConfirmDialog(MainForm.this,
-                                "Delete topic?",
+                                "Delete: " + topicToDelete.getTitle() + "?",
                                 "Confirm Deletion",
                                 JOptionPane.YES_NO_CANCEL_OPTION,
                                 JOptionPane.QUESTION_MESSAGE, null);
 
                         if(response == JOptionPane.YES_OPTION)
                         {
-                            controller.deleteButtonPress(idToDelete, selectedIndex);
+                            controller.deleteButtonPress(topicToDelete);
                         }
                         else
                         {

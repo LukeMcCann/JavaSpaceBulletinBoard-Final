@@ -129,10 +129,8 @@ public class MenuController
         }
     }
 
-    public void deleteButtonPress(UUID id, int row)
+    public void deleteButtonPress(TopicEntry topic)
     {
-        TopicEntry topic =
-                topicUtils.getTopicByID(id);
         if(topic != null)
         {
             deleteTopic(topic);
