@@ -42,6 +42,8 @@ public class TopicForm extends JFrame
     public TopicForm(UserEntry user, TopicEntry topic)
     {
         this.controller = new TopicController(this, user, topic);
+        this.user = user;
+        this.topic = topic;
 
         getContentPane().add(pnl_main);
         postListSetup();

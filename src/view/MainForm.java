@@ -1,6 +1,7 @@
 package view;
 
 import controller.MenuController;
+import model.TopicEntry;
 import model.UserEntry;
 import org.w3c.dom.html.HTMLObjectElement;
 import util.TopicUtils;
@@ -31,8 +32,9 @@ public class MainForm extends JFrame
     private MenuController controller;
     private DefaultTableModel topicsModel;
     private TopicUtils topicUtils = TopicUtils.getTopicUtils();
-    private static final int OWNER_ID = 2;
-    private static final int TOPIC_ID = 3;
+    private static final int OWNER_INDEX = 2;
+    private static final int TOPIC_INDEX = 3;
+    private int selectedIndex;
     private static DefaultTableCellRenderer dtcr;
 
 
@@ -40,55 +42,40 @@ public class MainForm extends JFrame
     {
         this.user = user;
         init();
-        setTopicModel();
-        listen();
+    }
+
+    private void makeCellsUneditable(JTable table)
+    {
+        for (int i = 0; i < table.getColumnCount(); i++)
+        {
+            Class<?> columnClass = table.getColumnClass(i);
+            table.setDefaultEditor(columnClass, null);
+        }
     }
 
     private void init()
     {
-        controller = new MenuController(this, this.user);
-        setPreferredSize(new Dimension(500, 750));
-        tbl_topicList.setShowHorizontalLines(true);
-        tbl_topicList.setShowVerticalLines(true);
-
-        setTableRules();
+        controller = new MenuController(this, user);
         getContentPane().add(pnl_main);
+
+        topicsModel = controller.createTopicModel();
+        tbl_topicList.setModel(topicsModel);
+
+        tbl_topicList.removeColumn(tbl_topicList.getColumnModel().getColumn(TOPIC_INDEX));
+        tbl_topicList.removeColumn(tbl_topicList.getColumnModel().getColumn(OWNER_INDEX));
+
+        tbl_topicList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+        makeCellsUneditable(tbl_topicList);
+        listen();
+
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setPreferredSize(new Dimension(500, 750));
         setTitle("BulletinBoard - Logged in as: " + user.getUsername());
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
         pack();
         setVisible(true);
     }
-
-    private void setTopicModel()
-    {
-        topicsModel = controller.createTopicModel();
-
-        try
-        {
-            tbl_topicList.setModel(topicsModel);
-            tbl_topicList.removeColumn(
-                    tbl_topicList.getColumnModel().getColumn(TOPIC_ID));
-
-            tbl_topicList.removeColumn(
-                    tbl_topicList.getColumnModel().getColumn(OWNER_ID));
-
-
-            tbl_topicList.setVisible(true);
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(rootPane,
-                    "Error " + e.getMessage());
-        }
-
-    }
-
-    private void setTableRules()
-    {
-        tbl_topicList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-    }
-
 
     private void listen()
     {
@@ -98,7 +85,7 @@ public class MainForm extends JFrame
             public void actionPerformed(ActionEvent actionEvent)
             {
                 controller.newTopicButtonPress();
-                controller.refresh(tbl_topicList, TOPIC_ID, OWNER_ID);
+                controller.refresh(tbl_topicList, TOPIC_INDEX, OWNER_INDEX);
             }
         });
 
@@ -107,7 +94,7 @@ public class MainForm extends JFrame
             @Override
             public void actionPerformed(ActionEvent actionEvent)
             {
-                controller.refresh(tbl_topicList, TOPIC_ID, OWNER_ID);
+                controller.refresh(tbl_topicList, TOPIC_INDEX, OWNER_INDEX);
             }
         });
 
@@ -119,33 +106,43 @@ public class MainForm extends JFrame
                 int selectedIndex =
                         tbl_topicList.getSelectedRow();
 
-                if(selectedIndex != -1)
+                if(selectedIndex == -1)
+                {
+                    JOptionPane.showMessageDialog(MainForm.this,
+                            "Failed to join topic: " + "None Selected");
+                }
+                else
                 {
                     // topic selected
                     UUID topicJoinID = (UUID)
-                            topicsModel.getValueAt(selectedIndex, TOPIC_ID);
+                            topicsModel.getValueAt(
+                                    selectedIndex, TOPIC_INDEX);
+
+                    System.out.println(topicUtils.getTopicByID(topicJoinID).getTitle());
+//                    System.out.println(selectedIndex);
+//                    System.out.println(topicJoinID);
+
+                    TopicEntry selectedTopic =
+                            topicUtils.getTopicByID(topicJoinID);
 
                     String title =
-                            topicUtils.getTopicByID(topicJoinID).getTitle();
+                            selectedTopic.getTitle();
+
+                    System.out.println(title);
 
                     int response = JOptionPane.showConfirmDialog(
-                                MainForm.this,
-                                "Join: " + title + "?",
-                                "Joining: " + title,
-                                JOptionPane.YES_NO_OPTION,
-                                JOptionPane.QUESTION_MESSAGE,
-                                null);
+                            MainForm.this,
+                            "Join: " + title + "?",
+                            "Joining: " + title,
+                            JOptionPane.YES_NO_OPTION,
+                            JOptionPane.QUESTION_MESSAGE,
+                            null);
 
                     if(response == 0)
                     {
                         // join
-                        controller.joinTopicButtonPress(topicJoinID);
+                        controller.joinTopicButtonPress(selectedTopic);
                     }
-                }
-                else
-                {
-                    JOptionPane.showMessageDialog(MainForm.this,
-                            "Failed to join topic: " + "None Selected");
                 }
             }
         });
@@ -161,15 +158,15 @@ public class MainForm extends JFrame
             @Override
             public void actionPerformed(ActionEvent actionEvent)
             {
-                int selectedIndex =
+                selectedIndex =
                         tbl_topicList.getSelectedRow();
 
                 System.out.println(selectedIndex);
                 if(selectedIndex != -1)
                 {
-                    if(user.getID().equals(topicsModel.getValueAt(selectedIndex, OWNER_ID)))
+                    if(user.getID().equals(topicsModel.getValueAt(selectedIndex, OWNER_INDEX)))
                     {
-                        UUID idToDelete = (UUID) topicsModel.getValueAt(selectedIndex, TOPIC_ID);
+                        UUID idToDelete = (UUID) topicsModel.getValueAt(selectedIndex, TOPIC_INDEX);
 
                         int response = JOptionPane.showConfirmDialog(MainForm.this,
                                 "Delete topic?",
@@ -201,7 +198,7 @@ public class MainForm extends JFrame
                             "Topic Deletion Failed",
                             JOptionPane.ERROR_MESSAGE, null);
                 }
-                controller.refresh(tbl_topicList, TOPIC_ID, OWNER_ID );
+                controller.refresh(tbl_topicList, TOPIC_INDEX, OWNER_INDEX );
             }
         });
 
@@ -213,14 +210,14 @@ public class MainForm extends JFrame
             {
                 super.mouseClicked(e);
 
-                int selectedIndex =
+                selectedIndex =
                         tbl_topicList.getSelectedRow();
 
                 if(selectedIndex != -1)
                 {
                     btn_join.setEnabled(true);
 
-                    if(topicsModel.getValueAt(selectedIndex, OWNER_ID).equals(user.getID()))
+                    if(topicsModel.getValueAt(selectedIndex, OWNER_INDEX).equals(user.getID()))
                     {
                         btn_delete.setEnabled(true);
                     }

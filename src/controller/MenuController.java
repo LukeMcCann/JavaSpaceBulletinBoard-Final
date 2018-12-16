@@ -119,7 +119,7 @@ public class MenuController
 
         if(StringUtils.isNotBlank(title))
         {
-            if(title.replaceAll("[^a-zA-Z0-9]", "").length() >= 3)
+            if(title.length() < 5 && title.length() < 20)
             {
                 // title contains at least 3 normal chars
                 createTopic(title);
@@ -127,7 +127,7 @@ public class MenuController
             else
             {
                 JOptionPane.showMessageDialog(mainForm,
-                        "Title must contain at leas 3 normal characters.");
+                        "Title must contain at 3 - 20 characters.");
             }
         }
         else
@@ -167,11 +167,8 @@ public class MenuController
         }
     }
 
-    public void joinTopicButtonPress(UUID id)
+    public void joinTopicButtonPress(TopicEntry topic)
     {
-        TopicEntry topic =
-                topicUtils.getTopicByID(id);
-
         if(topic != null)
         {
             joinTopic(topic);

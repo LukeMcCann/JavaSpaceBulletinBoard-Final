@@ -74,7 +74,7 @@ public class TopicUtils
                 else
                 {
                     // topic exists
-                    System.err.println("Error: Topic already exists!");
+                    System.err.println("Error: " + topic.getTitle() +  " already exists!");
                     JOptionPane.showMessageDialog(null,
                             topic.getTitle() + " already exists.");
                 }
@@ -171,7 +171,7 @@ public class TopicUtils
         try
         {
             topic = (TopicEntry)
-                    space.readIfExists(template, null, 3000);
+                    space.readIfExists(template, null, 1000);
         }
         catch(Exception e)
         {
@@ -203,6 +203,8 @@ public class TopicUtils
                     removeAllFromTopic(topic, transaction);
 
                     // TODO: delete all posts
+
+                    transaction.commit();
 
                 }
                 catch (Exception e)
