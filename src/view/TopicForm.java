@@ -62,7 +62,6 @@ public class TopicForm extends JFrame
         setVisible(true);
 
         listen();
-
     }
 
     private void postListSetup()
@@ -88,6 +87,13 @@ public class TopicForm extends JFrame
         tbl_userList.removeColumn(tbl_userList.getColumnModel().getColumn(1));
         tbl_userList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         tbl_userList.getColumnModel().getColumn(0).setPreferredWidth(450);
+    }
+
+    private void refresh()
+    {
+        controller.refresh(tbl_postList, tbl_userList);
+        postListSetup();
+        userListSetup();
     }
 
     @Override
@@ -173,6 +179,8 @@ public class TopicForm extends JFrame
             {
                 String message = ta_message.getText();
                 controller.sendButtonPress(message, user, getSelectedUser(), topic);
+
+                refresh();
             }
         });
         /**
@@ -235,6 +243,7 @@ public class TopicForm extends JFrame
                 {
                     ta_message.setText(null);
                 }
+                refresh();
             }
 
 
@@ -249,6 +258,33 @@ public class TopicForm extends JFrame
                 {
                     ta_message.setText("Write your message...");
                 }
+            }
+        });
+
+        tbl_postList.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent mouseEvent) {
+
+            }
+
+            @Override
+            public void mousePressed(MouseEvent mouseEvent) {
+
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent mouseEvent) {
+
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent mouseEvent) {
+                refresh();
+            }
+
+            @Override
+            public void mouseExited(MouseEvent mouseEvent) {
+
             }
         });
 
@@ -289,6 +325,7 @@ public class TopicForm extends JFrame
 
             @Override
             public void mouseEntered(MouseEvent mouseEvent) {
+                refresh();
             }
 
             @Override
