@@ -290,6 +290,7 @@ public class TopicUtils
 
             while(space.takeIfExists(template, transaction, 3000) != null)
             {
+               // space.takeIfExists(template,transaction 3000);
                 inTopic = false;
             }
 

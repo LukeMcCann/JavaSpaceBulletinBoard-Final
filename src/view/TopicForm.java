@@ -9,10 +9,7 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.DocumentFilter;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
+import java.awt.event.*;
 
 public class TopicForm extends JFrame
 {
@@ -46,7 +43,7 @@ public class TopicForm extends JFrame
 
         setRules();
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        setSize(new Dimension(850, 550));
+        setSize(new Dimension(1000, 750));
         setTitle("Topic - " + topic.getTitle());
         setVisible(true);
 
@@ -62,8 +59,8 @@ public class TopicForm extends JFrame
 
         makeTableUneditable(tbl_postList);
 
-        tbl_postList.getColumnModel().getColumn(0).setPreferredWidth(169);
-        tbl_postList.getColumnModel().getColumn(1).setPreferredWidth(169);
+        tbl_postList.getColumnModel().getColumn(0).setPreferredWidth(170);
+        tbl_postList.getColumnModel().getColumn(1).setPreferredWidth(170);
         tbl_postList.getColumnModel().getColumn(2).setPreferredWidth(169);
     }
     private void userListSetup()
@@ -72,13 +69,22 @@ public class TopicForm extends JFrame
         tbl_userList.setModel(usersListModel);
         tbl_userList.removeColumn(tbl_userList.getColumnModel().getColumn(1));
         tbl_userList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        tbl_userList.getColumnModel().getColumn(0).setPreferredWidth(100);
+        tbl_userList.getColumnModel().getColumn(0).setPreferredWidth(450);
+    }
+
+    @Override
+    public void dispose()
+    {
+        controller.closeServices(this);
     }
 
     /**
      *
-     * @param table
+     * @Reference https://stackoverflow.com/questions/30699772/when-to-use-super-render-
+     *                      super-disposesuper-pause-and-super-resizew-h
      */
+    public void superDispose() {super.dispose();}
+
     private void makeTableUneditable(JTable table)
     {
         for(int i = 0; i < table.getColumnCount(); i++)
@@ -103,6 +109,14 @@ public class TopicForm extends JFrame
         ta_message.setFont(new Font("Serif", Font.ITALIC, 16));
         ta_message.setLineWrap(true);
         ta_message.setWrapStyleWord(true);
+    }
+
+    private void refresh()
+    {
+        controller.refreshUserModel(
+                usersListModel, tbl_userList, 1);
+        controller.refreshPostModel(
+                postListModel, tbl_postList, 3);
     }
 
     private void listen()

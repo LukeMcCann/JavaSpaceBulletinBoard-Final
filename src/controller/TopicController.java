@@ -133,10 +133,19 @@ public class TopicController
     /**
      * Safely removes entries
      */
-    public void closeServices()
+    public void closeServices(TopicForm form)
     {
-        topicUtils.removeUserFrom(user, topic);
-        topicForm.dispose();
+        try
+        {
+            topicUtils.removeUserFrom(user, topic);
+            form.superDispose();
+        }
+        catch(Exception e)
+        {
+            System.err.println("Issue disposing window!");
+            System.err.println("Error: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     public List<PostEntry> getDirectMessages()
@@ -144,4 +153,20 @@ public class TopicController
         return directMessageList;
     }
 
+
+
+    // While similar the following work more effectively in this way
+    public void refreshUserModel(DefaultTableModel model, JTable table, int columnToRemove)
+    {
+        userListModel = createUsersModel();
+        table.setModel(userListModel);
+        table.removeColumn(table.getColumnModel().getColumn(columnToRemove));
+    }
+
+    public void refreshPostModel(DefaultTableModel model, JTable table, int columnToRemove)
+    {
+        postListModel = createUsersModel();
+        table.setModel(postListModel);
+        table.removeColumn(table.getColumnModel().getColumn(columnToRemove));
+    }
 }
