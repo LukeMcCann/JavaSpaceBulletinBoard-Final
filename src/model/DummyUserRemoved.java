@@ -12,7 +12,7 @@ public class DummyUserRemoved implements Entry
 
     public DummyUserRemoved(TopicEntry topic) {this.topic = topic;}
 
-    public DummyUserRemoved(TopicEntry topic, UserEntry user)
+    public DummyUserRemoved(UserEntry user, TopicEntry topic)
     {
         this.topic = topic;
         this.user = user;

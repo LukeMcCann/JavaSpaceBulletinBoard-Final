@@ -159,6 +159,7 @@ public class MenuController
         try
         {
             // delete topic
+            topicUtils.delete(topic, user);
         }
         catch(Exception e)
         {
@@ -210,7 +211,7 @@ public class MenuController
 
         for(DummyUserInTopic user : users)
         {
-            if(user.getUser().equals(user))
+            if(user.getUser().equals(this.user))
             {
                 // current user found in topic
                 return true;

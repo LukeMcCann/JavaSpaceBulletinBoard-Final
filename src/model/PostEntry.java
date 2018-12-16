@@ -26,7 +26,7 @@ public class PostEntry implements Entry
     public PostEntry(UserEntry author, UserEntry recipient, String content)
     {
         this.id = UUID.randomUUID();
-        this.postedAt = generateTimeStamp();
+        generateTimeStamp();
 
         this.author = author;
         this.recipient = recipient;
@@ -36,12 +36,12 @@ public class PostEntry implements Entry
     /**
      * Creates a formatess date-time stamp from the current time
      */
-    public String generateTimeStamp()
+    public void generateTimeStamp()
     {
         Date date = new Date();
         String format = "hh:mm:ss a";
         DateFormat dateFormat = new SimpleDateFormat(format);
-        return dateFormat.format(date);
+        this.postedAt = dateFormat.format(date);
     }
 
     // Getters and Setters (Convenience Methods)
@@ -52,7 +52,6 @@ public class PostEntry implements Entry
     public void setTopic(TopicEntry topic) {this.topic = topic;}
 
     public String getPostedAt() {return this.postedAt;}
-    public void setPostedAt() {this.postedAt = generateTimeStamp();}
 
     public UserEntry getAuthor() {return this.author;}
     public void setAuthor(UserEntry author) {this.author = author;}

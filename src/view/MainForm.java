@@ -116,12 +116,12 @@ public class MainForm extends JFrame
             @Override
             public void actionPerformed(ActionEvent actionEvent)
             {
-                int selectedIndex = tbl_topicList.getSelectedRow();
+                int selectedIndex =
+                        tbl_topicList.getSelectedRow();
 
                 if(selectedIndex != -1)
                 {
                     // topic selected
-
                     UUID topicJoinID = (UUID)
                             topicsModel.getValueAt(selectedIndex, TOPIC_ID);
 
@@ -201,6 +201,7 @@ public class MainForm extends JFrame
                             "Topic Deletion Failed",
                             JOptionPane.ERROR_MESSAGE, null);
                 }
+                controller.refresh(tbl_topicList, TOPIC_ID, OWNER_ID );
             }
         });
 
@@ -223,9 +224,6 @@ public class MainForm extends JFrame
                     {
                         btn_delete.setEnabled(true);
                     }
-//                    System.out.println(tbl_topicList.getSelectedRow());
-//                    System.out.println(selectedIndex);
-//                    System.out.println(OWNER_ID + " : " + user.getID() );
                 }
                 else
                 {

@@ -1,6 +1,7 @@
 package util;
 
 import model.DummyUserInTopic;
+import model.DummyUserRemoved;
 import model.TopicEntry;
 import model.UserEntry;
 import net.jini.core.lease.Lease;
@@ -198,7 +199,9 @@ public class TopicUtils
 
                     space.takeIfExists(topic, transaction, 3000);
 
-                    // TODO: delete all users in topic
+                    // delete all users in topic
+                    removeAllFromTopic(topic, transaction);
+
                     // TODO: delete all posts
 
                 }
@@ -207,6 +210,103 @@ public class TopicUtils
                     e.printStackTrace();
                 }
             }
+        }
+    }
+
+    /**
+     * Removes all users from a topic
+     *
+     * @param topic - the topic to remove from
+     * @param transaction - the transaction to use
+     *
+     * @Reference JavaSpaces: Prinicples
+     */
+    public void removeAllFromTopic(TopicEntry topic, Transaction transaction)
+    {
+        DummyUserInTopic template = new DummyUserInTopic();
+
+        try
+        {
+            while(space.readIfExists(template, transaction, 3000) != null)
+            {
+                space.takeIfExists(template, transaction, 3000);
+            }
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Adds a user to a topic using the DummyUserInTopic model.
+     *
+     * @param user - the user to add
+     * @param topic - the topic to join
+     */
+    public void registerUserTo(UserEntry user, TopicEntry topic)
+    {
+        DummyUserInTopic userInTopic =
+                new DummyUserInTopic(topic, user);
+
+        try
+        {
+            Transaction transaction = TransactionBuilder.getTransaction();
+            if(space.readIfExists(userInTopic, transaction, 3000) == null)
+            {
+                // dummy user does not exist in space
+                space.write(userInTopic, transaction, Lease.FOREVER);
+            }
+            transaction.commit();
+        }
+        catch(Exception e)
+        {
+            JOptionPane.showMessageDialog(null,
+                    "Failed to join " + user.getUsername() + " to " + topic.getTitle(),
+                    "Failure", JOptionPane.ERROR_MESSAGE);
+
+            System.err.println("Error: " + e.getMessage());
+            e.getMessage();
+        }
+    }
+
+    /**
+     * Removes a user from a topic safely and iteratively
+     *
+     * @param user - user to remove
+     * @param topic - topic to remove user from
+     */
+    public void removeUserFrom(UserEntry user, TopicEntry topic)
+    {
+        Transaction transaction = TransactionBuilder.getTransaction();
+        boolean inTopic = true;
+        DummyUserInTopic template = new DummyUserInTopic(topic, user);
+
+        try
+        {
+            // remove all copies
+          //  original solution, works but not as effective if multiple copies
+            // e_searcher.takeAllMatchingEntries(space, transaction, template);
+
+            while(space.takeIfExists(template, transaction, 3000) != null)
+            {
+                inTopic = false;
+            }
+
+            if(!inTopic)
+            {
+                DummyUserRemoved removedUser =
+                        new DummyUserRemoved(template.getUser(),
+                                template.getTopic());
+
+                // write template to space for notifs (3min)
+                space.write(removedUser, transaction, 3000*60);
+            }
+            transaction.commit();
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
         }
     }
 
