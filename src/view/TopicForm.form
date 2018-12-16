@@ -35,6 +35,7 @@
           </grid>
         </constraints>
         <properties>
+          <text value="Write your message..."/>
           <verifyInputWhenFocusTarget value="true"/>
         </properties>
       </component>
@@ -42,7 +43,9 @@
         <constraints>
           <grid row="0" column="2" row-span="1" col-span="3" vsize-policy="4" hsize-policy="0" anchor="5" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
-        <properties/>
+        <properties>
+          <toolTipText value="Click to select, Click again to deselect."/>
+        </properties>
         <border type="none"/>
         <children>
           <component id="2198a" class="javax.swing.JTable" binding="tbl_userList">

@@ -35,10 +35,9 @@ public class TopicController
         topicUtils.registerUserTo(user, topic); // regitser user to topic
     }
 
-    public void sendButtonPress()
+    public void sendButtonPress(String message)
     {
-        JOptionPane.showMessageDialog(null,
-                "TODO");
+
     }
 
     /**

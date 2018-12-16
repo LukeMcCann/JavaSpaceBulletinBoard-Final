@@ -4,12 +4,16 @@ import controller.MenuController;
 import controller.TopicController;
 import model.TopicEntry;
 import model.UserEntry;
+import org.apache.commons.lang3.StringUtils;
+import util.UserUtils;
+import util.helper.SpaceSearcher;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.DocumentFilter;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.UUID;
 
 public class TopicForm extends JFrame
 {
@@ -30,6 +34,10 @@ public class TopicForm extends JFrame
 
     private DefaultTableModel postListModel;
     private DefaultTableModel usersListModel;
+
+    private SpaceSearcher sp_searcher = SpaceSearcher.getSpaceSearcher();
+    private UserEntry selectedUser;
+    private UserEntry previousSelectedUser;
 
     public TopicForm(UserEntry user, TopicEntry topic)
     {
@@ -143,12 +151,30 @@ public class TopicForm extends JFrame
             }
         });
 
-        btn_send.addActionListener(new ActionListener()
+        tbl_userList.addMouseListener(new MouseAdapter()
         {
             @Override
-            public void actionPerformed(ActionEvent actionEvent)
+            public void mouseClicked(MouseEvent e)
             {
-                controller.sendButtonPress();
+                super.mouseClicked(e);
+                int selected = tbl_userList.getSelectedRow();
+
+                if(selected != -1)
+                {
+                    if(selectedUser == null ||
+                            StringUtils.isBlank(selectedUser.getUsername()))
+                    {
+                        // is first selected user
+                        selectedUser = sp_searcher.getUserByUsername(
+                            tbl_userList.getValueAt(selected, 0).toString());
+                    }
+                    else
+                    {
+                        previousSelectedUser = selectedUser;
+                        selectedUser = null;
+                        tbl_userList.getSelectionModel().clearSelection();
+                    }
+                }
             }
         });
     }
