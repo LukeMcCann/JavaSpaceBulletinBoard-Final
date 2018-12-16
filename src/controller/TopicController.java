@@ -58,7 +58,6 @@ public class TopicController
         }
     }
 
-
     /**
      * Creates the data model for userList
      *
@@ -148,17 +147,6 @@ public class TopicController
         return postListModel;
     }
 
-    public void refresh(JTable postTable, JTable userTable)
-    {
-        postListModel = createPostsModel();
-        postTable.setModel(postListModel);
-        postTable.removeColumn(postTable.getColumnModel().getColumn(3));
-
-        userListModel = createUsersModel();
-        userTable.setModel(userListModel);
-        userTable.removeColumn(userTable.getColumnModel().getColumn(1));
-    }
-
     /**
      * Safely removes entries
      */
@@ -182,4 +170,20 @@ public class TopicController
         return directMessageList;
     }
 
+
+
+    // While similar the following work more effectively in this way
+    public void refreshUserModel(DefaultTableModel model, JTable table, int columnToRemove)
+    {
+        userListModel = createUsersModel();
+        table.setModel(userListModel);
+        table.removeColumn(table.getColumnModel().getColumn(columnToRemove));
+    }
+
+    public void refreshPostModel(DefaultTableModel model, JTable table, int columnToRemove)
+    {
+        postListModel = createUsersModel();
+        table.setModel(postListModel);
+        table.removeColumn(table.getColumnModel().getColumn(columnToRemove));
+    }
 }
