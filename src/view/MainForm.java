@@ -114,7 +114,7 @@ public class MainForm extends JFrame
                 {
                     // topic selected
                     String topicJoin =
-                            topicsModel.getValueAt(
+                            tbl_topicList.getModel().getValueAt(
                                     selectedIndex, 0).toString();
 
                     System.out.println(topicUtils.getTopicByTitle(topicJoin).getTitle());
