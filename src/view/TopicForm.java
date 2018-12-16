@@ -6,6 +6,7 @@ import model.TopicEntry;
 import model.UserEntry;
 import org.apache.commons.lang3.StringUtils;
 import util.UserUtils;
+import util.helper.CellWrapRenderer;
 import util.helper.SpaceSearcher;
 
 import javax.swing.*;
@@ -76,7 +77,10 @@ public class TopicForm extends JFrame
         tbl_postList.getColumnModel().getColumn(0).setPreferredWidth(170);
         tbl_postList.getColumnModel().getColumn(1).setPreferredWidth(170);
         tbl_postList.getColumnModel().getColumn(2).setPreferredWidth(169);
+
+        tbl_postList.getColumnModel().getColumn(2).setCellRenderer(new CellWrapRenderer());
     }
+
     private void userListSetup()
     {
         usersListModel = controller.createUsersModel();

@@ -19,7 +19,10 @@
         <children>
           <component id="aa62" class="javax.swing.JTable" binding="tbl_postList">
             <constraints/>
-            <properties/>
+            <properties>
+              <autoResizeMode value="4"/>
+              <doubleBuffered value="true"/>
+            </properties>
           </component>
         </children>
       </scrollpane>
