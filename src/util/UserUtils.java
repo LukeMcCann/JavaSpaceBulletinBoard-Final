@@ -35,7 +35,6 @@ public class UserUtils
     public Lease createUser(UserEntry user)
     {
         Lease success = null;
-
         Transaction transaction =
                 TransactionBuilder.getTransaction();
 

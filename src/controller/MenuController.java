@@ -83,8 +83,7 @@ public class MenuController
         Object[][] content = {};
 
         // put all items from collection into array
-        if(topicCollection.size() > 0 &&
-                topicCollection != null)
+        if(topicCollection != null && topicCollection.size() > 0)
         {
             // create new object array of correct dimensions
             content = new Object[topicCollection.size()][5];
@@ -111,7 +110,7 @@ public class MenuController
      * @Reference https://alvinalexander.com/
      *             java/joptionpane-showinputdialog-examples
      */
-    public void newTopicButtonPress()
+    public void newTopicButtonPress(JTable table)
     {
         String title = JOptionPane.showInputDialog(mainForm,
                 user.getUsername() +
@@ -119,16 +118,8 @@ public class MenuController
 
         if(StringUtils.isNotBlank(title))
         {
-            if(title.length() < 5 && title.length() < 20)
-            {
-                // title contains at least 3 normal chars
                 createTopic(title);
-            }
-            else
-            {
-                JOptionPane.showMessageDialog(mainForm,
-                        "Title must contain at 3 - 20 characters.");
-            }
+                refresh(table, 3,2);
         }
         else
         {
@@ -191,7 +182,7 @@ public class MenuController
         }
         else
         {
-            new TopicForm(user, topic);
+            new TopicForm(this.user, topic);
         }
     }
 

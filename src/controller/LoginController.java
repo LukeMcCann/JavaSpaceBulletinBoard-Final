@@ -69,23 +69,30 @@ public class LoginController
                             {
                                 // there are at least 3 non-special characters
                                 // create user
-                                userUtils.createUser(user);
+                                if(userUtils.createUser(user) != null)
+                                {
 
-                                JOptionPane.showMessageDialog(loginForm,
-                                        "Welcome " + user.getUsername() + "!");
+                                    JOptionPane.showMessageDialog(loginForm,
+                                            "Welcome " + user.getUsername() + "!");
 
-                                // remove loginForm
-                                loginForm.setVisible(false);
-                                loginForm.dispose();
+                                    // remove loginForm
+                                    loginForm.setVisible(false);
+                                    loginForm.dispose();
 
-                                // Debug:
+                                    // Debug:
 //                                UserEntry debug = (UserEntry) space.readIfExists(user, null, 3000);
 //                                System.out.println("User: " + debug.getUsername() +" Successfully added!");
 //                                System.out.println("Main Form Created!");
 
-                                // Create MainForm
-                                new MainForm(user);
-
+                                    // Create MainForm
+                                    new MainForm(user);
+                                }
+                                else
+                                {
+                                    // user already exists
+                                    JOptionPane.showMessageDialog(loginForm,
+                                            user.getUsername() + " is taken.");
+                                }
                             }
                             else
                             {

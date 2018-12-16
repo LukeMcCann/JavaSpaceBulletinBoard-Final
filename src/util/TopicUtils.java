@@ -57,7 +57,7 @@ public class TopicUtils
      */
     public Lease createTopic(TopicEntry topic)
     {
-        Transaction transaction = TransactionBuilder.getTransaction();
+        Transaction transaction = TransactionBuilder.getTransaction(3000);
         Lease success = null;
 
         try
@@ -70,6 +70,8 @@ public class TopicUtils
                 {
                     success = space.write(topic, transaction, DEFAULT_TOPIC_LEASE);
                     transaction.commit();
+
+                   // System.out.println(topic.getTitle());
                 }
                 else
                 {
@@ -181,6 +183,23 @@ public class TopicUtils
             e.printStackTrace();
         }
         return topic;
+    }
+
+    public TopicEntry getTopicByTitle(String title)
+    {
+        TopicEntry template = new TopicEntry();
+        template.setTitle(title);
+
+        try
+        {
+            template = (TopicEntry)
+                    space.readIfExists(template, null, 1000);
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+        return template;
     }
 
     public void delete(TopicEntry topic, UserEntry user)

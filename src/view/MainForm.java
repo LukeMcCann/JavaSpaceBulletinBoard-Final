@@ -84,8 +84,7 @@ public class MainForm extends JFrame
             @Override
             public void actionPerformed(ActionEvent actionEvent)
             {
-                controller.newTopicButtonPress();
-                controller.refresh(tbl_topicList, TOPIC_INDEX, OWNER_INDEX);
+                controller.newTopicButtonPress(tbl_topicList);
             }
         });
 
@@ -114,16 +113,16 @@ public class MainForm extends JFrame
                 else
                 {
                     // topic selected
-                    UUID topicJoinID = (UUID)
+                    String topicJoin =
                             topicsModel.getValueAt(
-                                    selectedIndex, TOPIC_INDEX);
+                                    selectedIndex, 0).toString();
 
-                    System.out.println(topicUtils.getTopicByID(topicJoinID).getTitle());
+                    System.out.println(topicUtils.getTopicByTitle(topicJoin).getTitle());
 //                    System.out.println(selectedIndex);
 //                    System.out.println(topicJoinID);
 
                     TopicEntry selectedTopic =
-                            topicUtils.getTopicByID(topicJoinID);
+                            topicUtils.getTopicByTitle(topicJoin);
 
                     String title =
                             selectedTopic.getTitle();
@@ -217,9 +216,16 @@ public class MainForm extends JFrame
                 {
                     btn_join.setEnabled(true);
 
-                    if(topicsModel.getValueAt(selectedIndex, OWNER_INDEX).equals(user.getID()))
+//                    System.out.println(topicsModel.getValueAt(selectedIndex, 0));
+//                    System.out.println(topicsModel.getValueAt(selectedIndex, 0));
+                    if(tbl_topicList.getModel().getValueAt(
+                            selectedIndex, OWNER_INDEX).equals(user.getID()))
                     {
                         btn_delete.setEnabled(true);
+                    }
+                    else
+                    {
+                        btn_delete.setEnabled(false);
                     }
                 }
                 else
