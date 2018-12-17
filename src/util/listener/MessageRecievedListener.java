@@ -27,12 +27,12 @@ public class MessageRecievedListener implements RemoteEventListener, Serializabl
      * Listens for received messages
      * @param event - the event which triggered
      */
+    @Override
     public void notify(RemoteEvent event)
     {
         AvailabilityEvent availEvent = (AvailabilityEvent) event;
         try
         {
-
             // get the post that triggered event
             PostEntry post = (PostEntry) availEvent.getEntry();
 

@@ -262,8 +262,8 @@ public class MainForm extends JFrame
             @Override
             public void actionPerformed(ActionEvent actionEvent)
             {
+                controller.createNotifModel();
                 controller.markButtonPress(getSelectedTopic());
-                new NotifForm(user, controller, controller.createNotifModel());
             }
         });
     }

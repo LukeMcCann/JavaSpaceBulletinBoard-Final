@@ -24,6 +24,7 @@ public class TopicAddedListener implements RemoteEventListener, Serializable
      * Listens for users being added
      * @param event - the event trigger
      */
+    @Override
     public void notify(RemoteEvent event)
     {
         try

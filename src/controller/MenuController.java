@@ -432,7 +432,14 @@ public class MenuController
         try
         {
             Transaction transaction = TransactionBuilder.getTransaction();
-            topicOfInterest = e_searcher.readAllMatchingEntries(SpaceUtils.getSpace(), transaction, template);
+            List<TopicEntry> interestList =
+                    e_searcher.readAllMatchingEntries(SpaceUtils.getSpace(), transaction, template);
+
+            for(int i = 0; i < interestList.size(); i++)
+            {
+                TopicEntry topic = interestList.get(i);
+                topicOfInterest.add(topic);
+            }
         }
         catch (Exception e)
         {

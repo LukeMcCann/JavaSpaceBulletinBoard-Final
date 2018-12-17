@@ -387,5 +387,18 @@ public class TopicUtils
     public Lease addTestTopic(TopicEntry topic) throws RemoteException, TransactionException
     {int THREE_MINUTES = 1000*3; return space.write(topic, null, THREE_MINUTES);}
 
+    /**
+     * Adds a DummyUserInTopic object to the space for 9 minutes for testing purposes.
+     *
+     * @param topic - the topic to add
+     * @param user - the user to add
+     *
+     * @return null if not successful
+     * @throws RemoteException
+     * @throws TransactionException
+     */
+    public Lease addDebugTopicUser(TopicEntry topic, UserEntry user) throws RemoteException, TransactionException
+    {return space.write(new DummyUserInTopic(topic, user), null, 1000*3*60);}
+
 
 }

@@ -7,8 +7,7 @@ import model.UserEntry;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionAdapter;
+import java.awt.event.*;
 
 public class NotifForm extends JFrame
 {
@@ -36,6 +35,30 @@ public class NotifForm extends JFrame
         setVisible(true);
 
         listen();
+        btn_remove.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent)
+            {
+                if(tbl_notifs.getSelectedRow() != -1)
+                {
+                   int response =  JOptionPane.showOptionDialog(null,
+                            "Remove notifications for: " +
+                                    tbl_notifs.getValueAt(tbl_notifs.getSelectedRow(), 0).toString(),
+                            "Remove?", JOptionPane.YES_NO_OPTION,
+                            JOptionPane.QUESTION_MESSAGE, null, null, null);
+
+                   if(response == JOptionPane.YES_OPTION)
+                   {
+                       model.removeRow(tbl_notifs.getSelectedRow());
+                   }
+                }
+                else
+                {
+                    JOptionPane.showMessageDialog(null, "Please select a item to remove.");
+                }
+            }
+        });
     }
 
     private void init()
@@ -55,18 +78,46 @@ public class NotifForm extends JFrame
 
     private void listen()
     {
-        scrl_notif.addMouseMotionListener(new MouseMotionAdapter() {
+        scrl_notif.addMouseMotionListener(new MouseMotionAdapter()
+        {
             @Override
-            public void mouseMoved(MouseEvent e) {
+            public void mouseMoved(MouseEvent e)
+            {
                 super.mouseMoved(e);
-                refresh();
+                controller.updateNotifModel(tbl_notifs);
+            }
+        });
+
+        scrl_notif.addMouseListener(new MouseListener()
+        {
+            @Override
+            public void mouseClicked(MouseEvent mouseEvent)
+            {
+                controller.updateNotifModel(tbl_notifs);
+            }
+
+            @Override
+            public void mousePressed(MouseEvent mouseEvent)
+            {
+                controller.updateNotifModel(tbl_notifs);
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent mouseEvent) {
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent mouseEvent)
+            {
+                controller.updateNotifModel(tbl_notifs);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent mouseEvent)
+            {
+                controller.updateNotifModel(tbl_notifs);
             }
         });
     }
 
-    private void refresh()
-    {
-        controller.updateNotifModel(tbl_notifs);
-        init();
-    }
 }

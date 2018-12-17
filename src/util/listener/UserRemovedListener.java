@@ -50,6 +50,7 @@ public class UserRemovedListener implements RemoteEventListener
      *
      * @throws RemoteException
      */
+    @Override
     public void notify(RemoteEvent remoteEvent) throws UnknownEventException, RemoteException
     {
         try
