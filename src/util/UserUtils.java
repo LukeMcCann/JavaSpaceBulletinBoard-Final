@@ -57,6 +57,37 @@ public class UserUtils
     }
 
     /**
+     * Renews a users lease
+     * @param user - the user whose lease to renew.
+     */
+    public void renewUserLease(UserEntry user)
+    {
+        if(user.getUsername() != null &&
+                user.getSecureUsername() != null)
+        {
+            Transaction transaction = TransactionBuilder.getTransaction();
+
+            UserEntry spaceUser =
+                    searcher.getUserByUsername(user.getUsername(), transaction);
+
+            if(spaceUser != null)
+            {
+                try
+                {
+                    // take from space
+                    space.takeIfExists(spaceUser, transaction, 1000);
+                    // write back with new lease
+                    space.write(user, transaction, ONE_MONTH);
+                }
+                catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    /**
      * Create a test user that exists for three minutes
      * @param user
      * @return

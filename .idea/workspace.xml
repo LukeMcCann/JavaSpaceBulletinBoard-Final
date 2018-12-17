@@ -2,14 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e0854c20-a282-43b1-a073-c261941a2b0e" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/uiDesigner.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/controller/TopicController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controller/TopicController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/util/PostUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/util/PostUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/controller/LoginController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controller/LoginController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/util/TopicUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/util/TopicUtils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/view/SecretChatForm.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/view/SecretChatForm.form" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/view/SecretChatForm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/view/SecretChatForm.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/view/TopicForm.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/view/TopicForm.form" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/view/TopicForm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/view/TopicForm.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/util/UserUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/util/UserUtils.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -44,7 +39,7 @@
           <entry key="class" value="2" />
           <entry key="form" value="9" />
           <entry key="gitignore" value="2" />
-          <entry key="java" value="87" />
+          <entry key="java" value="89" />
           <entry key="md" value="1" />
           <entry key="properties" value="1" />
           <entry key="txt" value="2" />
@@ -54,7 +49,7 @@
         <counts>
           <entry key="CLASS" value="2" />
           <entry key="GUI_DESIGNER_FORM" value="9" />
-          <entry key="JAVA" value="87" />
+          <entry key="JAVA" value="89" />
           <entry key="Markdown" value="1" />
           <entry key="PLAIN_TEXT" value="6" />
           <entry key="Properties" value="1" />
@@ -63,14 +58,14 @@
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
           <entry key="all" value="1" />
-          <entry key="java" value="54522" />
+          <entry key="java" value="55495" />
           <entry key="md" value="1" />
           <entry key="properties" value="10" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="JAVA" value="54522" />
+          <entry key="JAVA" value="55495" />
           <entry key="Markdown" value="1" />
           <entry key="PLAIN_TEXT" value="1" />
           <entry key="Properties" value="10" />
@@ -80,15 +75,6 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/model/PostEntry.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="280">
-              <caret line="27" column="76" selection-start-line="27" selection-start-column="76" selection-end-line="27" selection-end-column="76" />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/model/TopicEntry.java">
           <provider selected="true" editor-type-id="text-editor">
@@ -134,11 +120,11 @@
           <provider selected="true" editor-type-id="ui-designer" />
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/view/TopicForm.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="225">
-              <caret line="85" column="26" selection-start-line="85" selection-start-column="26" selection-end-line="85" selection-end-column="26" />
+              <caret line="85" column="14" lean-forward="true" selection-start-line="85" selection-start-column="14" selection-end-line="85" selection-end-column="14" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#3436#3437#0" expanded="true" />
@@ -149,19 +135,31 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/util/SpaceUtils.java">
+        <entry file="file://$PROJECT_DIR$/src/util/TopicUtils.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="405">
-              <caret line="51" column="18" selection-start-line="51" selection-start-column="18" selection-end-line="51" selection-end-column="18" />
+            <state relative-caret-position="248">
+              <caret line="82" column="16" lean-forward="true" selection-start-line="82" selection-start-column="16" selection-end-line="82" selection-end-column="16" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/util/TopicUtils.java">
+        <entry file="file://$PROJECT_DIR$/src/util/UserUtils.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-26">
-              <caret line="323" column="35" selection-start-line="323" selection-start-column="29" selection-end-line="323" selection-end-column="35" />
+            <state relative-caret-position="471">
+              <caret line="70" column="80" selection-start-line="70" selection-start-column="80" selection-end-line="70" selection-end-column="80" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/controller/LoginController.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="398">
+              <caret line="80" column="70" selection-start-line="80" selection-start-column="70" selection-end-line="80" selection-end-column="70" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -197,7 +195,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>getTopic</find>
       <find>createTopic</find>
       <find>createUser</find>
       <find>getTopicB</find>
@@ -225,8 +222,9 @@
       <find>delete</find>
       <find>add</find>
       <find>remove</find>
-      <find>ta_</find>
       <find>send</find>
+      <find>ta_</find>
+      <find>create</find>
     </findStrings>
     <replaceStrings>
       <replace>OWNER_INDEX</replace>
@@ -257,8 +255,6 @@
         <option value="$PROJECT_DIR$/src/model/DummyTopicDeleted.java" />
         <option value="$PROJECT_DIR$/src/util/SpaceUtils.java" />
         <option value="$PROJECT_DIR$/src/model/DummyUserRemoved.java" />
-        <option value="$PROJECT_DIR$/src/util/UserUtils.java" />
-        <option value="$PROJECT_DIR$/src/controller/LoginController.java" />
         <option value="$PROJECT_DIR$/src/controller/MenuController.java" />
         <option value="$PROJECT_DIR$/src/model/UserEntry.java" />
         <option value="$PROJECT_DIR$/src/model/TopicEntry.java" />
@@ -271,10 +267,12 @@
         <option value="$PROJECT_DIR$/src/util/PostUtils.java" />
         <option value="$PROJECT_DIR$/src/view/SecretChatForm.form" />
         <option value="$PROJECT_DIR$/src/view/SecretChatForm.java" />
-        <option value="$PROJECT_DIR$/src/util/TopicUtils.java" />
         <option value="$PROJECT_DIR$/src/view/TopicForm.form" />
         <option value="$PROJECT_DIR$/src/controller/TopicController.java" />
         <option value="$PROJECT_DIR$/src/view/TopicForm.java" />
+        <option value="$PROJECT_DIR$/src/util/TopicUtils.java" />
+        <option value="$PROJECT_DIR$/src/util/UserUtils.java" />
+        <option value="$PROJECT_DIR$/src/controller/LoginController.java" />
       </list>
     </option>
   </component>
@@ -290,9 +288,10 @@
       <select />
     </treeState>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
+  <component name="ProjectFrameBounds" extendedState="4">
+    <option name="x" value="960" />
     <option name="y" value="32" />
-    <option name="width" value="1098" />
+    <option name="width" value="960" />
     <option name="height" value="1048" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
@@ -371,7 +370,7 @@
     <property name="UI_DESIGNER_EDITOR_MODE.UIDesignerToolWindowManager.WIDTH" value="360" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1545015016918" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1545015732381" />
     <property name="last_opened_file_path" value="$USER_HOME$/Development/projects/JavaSpace/LATEST/chatroom" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
@@ -430,12 +429,12 @@
       <workItem from="1544898195861" duration="24440000" />
       <workItem from="1544922805629" duration="7816000" />
       <workItem from="1544983697087" duration="1463000" />
-      <workItem from="1545008841947" duration="6171000" />
+      <workItem from="1545008841947" duration="6878000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="102224000" />
+    <option name="totallyTimeSpent" value="102931000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -447,10 +446,10 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="32" width="1920" height="1048" extended-state="6" />
+    <frame x="960" y="32" width="960" height="1048" extended-state="4" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.18409818" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.3774617" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Image Layers" order="2" />
       <window_info id="Designer" order="3" />
@@ -459,14 +458,14 @@
       <window_info id="Favorites" order="6" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.15038419" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.15038419" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.39956093" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.32930845" />
       <window_info anchor="bottom" id="Version Control" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Database Changes" order="8" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Terminal" order="9" weight="0.32930845" />
+      <window_info anchor="bottom" id="Terminal" order="9" visible="true" weight="0.32930845" />
       <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
       <window_info anchor="bottom" id="Messages" order="11" weight="0.19319429" />
       <window_info anchor="right" id="Coverage" order="0" side_tool="true" weight="0.32977587" />
@@ -584,13 +583,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/util/UserUtils.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="127">
-          <caret line="36" column="29" selection-start-line="36" selection-start-column="29" selection-end-line="36" selection-end-column="29" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/view/MainForm.form">
       <provider selected="true" editor-type-id="ui-designer" />
     </entry>
@@ -672,16 +664,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/controller/LoginController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1347">
-          <caret line="93" column="75" selection-start-line="93" selection-start-column="75" selection-end-line="93" selection-end-column="75" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/controller/ChatController.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="60">
@@ -729,16 +711,6 @@
     <entry file="file://$PROJECT_DIR$/src/view/TopicForm.form">
       <provider selected="true" editor-type-id="ui-designer" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/util/TopicUtils.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-26">
-          <caret line="323" column="35" selection-start-line="323" selection-start-column="29" selection-end-line="323" selection-end-column="35" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/model/TopicEntry.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="212">
@@ -766,11 +738,38 @@
     <entry file="file://$PROJECT_DIR$/src/view/TopicForm.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="225">
-          <caret line="85" column="26" selection-start-line="85" selection-start-column="26" selection-end-line="85" selection-end-column="26" />
+          <caret line="85" column="14" lean-forward="true" selection-start-line="85" selection-start-column="14" selection-end-line="85" selection-end-column="14" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#3436#3437#0" expanded="true" />
             <element signature="e#3482#3483#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/util/TopicUtils.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="248">
+          <caret line="82" column="16" lean-forward="true" selection-start-line="82" selection-start-column="16" selection-end-line="82" selection-end-column="16" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/util/UserUtils.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="471">
+          <caret line="70" column="80" selection-start-line="70" selection-start-column="80" selection-end-line="70" selection-end-column="80" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/controller/LoginController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="398">
+          <caret line="80" column="70" selection-start-line="80" selection-start-column="70" selection-end-line="80" selection-end-column="70" />
+          <folding>
+            <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>

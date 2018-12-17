@@ -156,34 +156,11 @@ public class TopicUtils
     }
 
     /**
-     * Searches for a topic in the space by ID
+     * Retrieves a topic by its title
      *
-     * @param id - the id to find
-     *
-     * @return the TopicEntry which holds the ID
+     * @param title
+     * @return
      */
-    public TopicEntry getTopicByID(UUID id)
-    {
-        TopicEntry template = new TopicEntry();
-        template.setID(id);
-
-        TopicEntry topic = null;
-
-        try
-        {
-            topic = (TopicEntry)
-                    space.readIfExists(template, null, 1000);
-        }
-        catch(Exception e)
-        {
-            System.err.println(
-                    "Failed to get topic: " + id.toString());
-
-            e.printStackTrace();
-        }
-        return topic;
-    }
-
     public TopicEntry getTopicByTitle(String title)
     {
         TopicEntry template = new TopicEntry();

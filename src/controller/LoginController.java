@@ -78,6 +78,8 @@ public class LoginController
                                     // remove loginForm
                                     loginForm.setVisible(false);
                                     loginForm.dispose();
+                                    // Lease is renewed at every login
+                                    userUtils.renewUserLease(user);
 
                                     // Debug:
 //                                UserEntry debug = (UserEntry) space.readIfExists(user, null, 3000);
