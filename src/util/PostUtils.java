@@ -169,6 +169,9 @@ public class PostUtils
         List<PostEntry> postCollection =
                 e_searcher.readAllMatchingEntries(space, post);
 
+        if(postCollection == null || postCollection.size() <= 0) JOptionPane.showMessageDialog(null,
+                "No private messages.");
+
         Iterator<PostEntry> i = postCollection.iterator();
 
         while(i.hasNext())
@@ -189,5 +192,4 @@ public class PostUtils
         }
         return postCollection;
     }
-
 }

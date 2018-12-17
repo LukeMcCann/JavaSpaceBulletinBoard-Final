@@ -67,24 +67,23 @@ public class UserAddedNotif implements RemoteEventListener
     private boolean inUserList(UserEntry user)
     {
         DefaultTableModel userModel = controller.getUserListModel();
-
+        boolean inList = false;
         try
         {
             for (int i = 0; i < userModel.getRowCount(); i++)
             {
                 UUID idInTable = (UUID) userModel.getValueAt(i, 1);
 
-                if (!idInTable.equals(user.getID())) {
-                    return false;
+                if (!idInTable.equals(user.getID()))
+                {
+                    return inList;
                 }
             }
-            return true;
         }
         catch (Exception e)
         {
             e.printStackTrace();
         }
+        return inList = true;
     }
-
-
 }
