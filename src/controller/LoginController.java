@@ -1,8 +1,6 @@
 package controller;
 
-import com.sun.tools.javac.Main;
 import model.UserEntry;
-import net.jini.space.JavaSpace05;
 import org.apache.commons.lang3.StringUtils;
 import util.SpaceUtils;
 import util.UserUtils;
@@ -15,16 +13,42 @@ import view.MainForm;
 import javax.swing.*;
 import java.util.UUID;
 
+/**
+ * @Author Luke McCann
+ * @UniversityNumber U1364096
+ * @University The University of Huddersfield
+ *
+ * LoginController -
+ *          Contains methods for controlling all login logic.
+ *
+ * Debug statements have been commented out.
+ *
+ * @References https://stackoverflow.com/
+ *              questions/8881213/joptionpane-to-get-password
+ */
 public class LoginController
 {
     private LoginForm loginForm;
     private static final UserUtils userUtils = UserUtils.getUserutils();
     private static final SpaceExistsError spaceExists = SpaceExistsError.getSpaceExistsError();
     private static SpaceSearcher spaceSearcher = SpaceSearcher.getSpaceSearcher();
-//    private JavaSpace05 space = SpaceUtils.getSpace(); // debugging
+    // private JavaSpace05 space = SpaceUtils.getSpace(); // debugging
 
+    // Constructor
     public LoginController(LoginForm form) {this.loginForm = form;}
 
+
+    // Registration/Login
+
+    /**
+     * Checks a user is valid and adds a UserEntry to the space
+     * Utilises encryption for security.
+     *
+     * Will notify the user if a username is taken.
+     *
+     * @param username - the username to set (A secured version is saved as a comparator)
+     * @param password - the password to set (A hashed copy will be saved)
+     */
     public void registerUser(String username, String password)
     {
         if(!spaceExists.spaceExists(SpaceUtils.getSpace()))
@@ -132,6 +156,14 @@ public class LoginController
         }
     }
 
+    /**
+     * Checks if a user exists in the space
+     * <code>if user exists && password correct</code> logs the user in
+     * <code>else</code> asks the user to register
+     *
+     * @param username
+     * @param password
+     */
     public void loginUser(String username, String password)
     {
         // check password and username entered
@@ -190,22 +222,26 @@ public class LoginController
         }
     }
 
+
+    // Dialogs/Confirmation
+
     /**
-     * Opens a confirmation dialog to confirm password
+     * Opens a confirmation dialog for user to confirm password.
+     *
      * @return the entered password
      *
-     * @Reference https://stackoverflow.com/
+     * @References https://stackoverflow.com/
      *            questions/8881213/joptionpane-to-get-password
      */
     private String confirmPassword()
     {
         JPasswordField tf_password = new JPasswordField();
-        int okCxl = JOptionPane.showConfirmDialog(null,
+        int response = JOptionPane.showConfirmDialog(null,
                 tf_password, "Confirm Password: ",
                 JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 
         // Debug: System.out.println("Dialog" + tf_password.getPassword());
-        if (okCxl == JOptionPane.OK_OPTION)
+        if (response == JOptionPane.OK_OPTION)
         {
             return new String(tf_password.getPassword());
         }

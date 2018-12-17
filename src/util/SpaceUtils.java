@@ -17,7 +17,11 @@ import java.net.InetAddress;
  * @UniversityNumber U1364096
  * @University The University of Huddersfield
  *
- * SpaceUtils - handles JavaSpace and Transaction setup
+ * SpaceUtils -
+ *      handles JavaSpace and TransactionManager setup
+ *
+ * Significant changes have been made to support the user in easily connecting
+ * to different hosts.
  */
 public class SpaceUtils
 {
@@ -25,7 +29,7 @@ public class SpaceUtils
    private static InetAddress IP;
 
     /**
-     * Sets the current Host
+     * Set the current Host
      */
    public static void setHost(String hostname)
    {

@@ -6,17 +6,17 @@ import net.jini.core.transaction.Transaction;
 import net.jini.core.transaction.TransactionException;
 import net.jini.space.JavaSpace05;
 import util.helper.EntrySearcher;
-import util.helper.SpaceSearcher;
 import util.helper.TransactionBuilder;
 
 import javax.swing.*;
 import java.rmi.RemoteException;
 import java.util.Iterator;
 import java.util.List;
-import java.util.UUID;
 
 /**
- *
+ * @Author Luke McCann
+ * @UniversityNumber U1364096
+ * @University The University of Huddersfield
  *
  * @References https://books.google.co.uk/
  *              books?id=OhRy5xcJYbMC&pg=PA216&lpg=PA216&dq=javaspaces+l
@@ -28,15 +28,17 @@ import java.util.UUID;
  *
  *              https://docs.oracle.com/javase/7/docs/
  *              api/java/rmi/RemoteException.html
+ *
+ * TopicUtils -
+ *      utility class for handling topic-specific logic
  */
 public class TopicUtils
 {
     private JavaSpace05 space = SpaceUtils.getSpace();
-    private SpaceSearcher searcher = SpaceSearcher.getSpaceSearcher();
     private EntrySearcher e_searcher = new EntrySearcher();
-    private static TopicUtils topicUtils;
     private static PostUtils postUtils = PostUtils.getPostUtils();
 
+    private static TopicUtils topicUtils;
     private static final long DEFAULT_TOPIC_LEASE = Lease.FOREVER;
 
     private TopicUtils() {}
@@ -105,44 +107,112 @@ public class TopicUtils
         return success;
     }
 
-    /**
-     * Adds a topic to the space for three minutes
-     * for testing purposes
-     *
-     * @param topic - topic to add
-     * @return <code>true</code> if successful, else <code>false</code>
-     * @throws RemoteException
-     * @throws TransactionException
-     */
-    public Lease addTestTopic(TopicEntry topic) throws RemoteException, TransactionException
-    {int THREE_MINUTES = 1000*3; return space.write(topic, null, THREE_MINUTES);}
 
-    public boolean topicExists(TopicEntry topic, Transaction transaction)
+    // Registration
+
+    /**
+     * Adds a user to a topic using the DummyUserInTopic model.
+     *
+     * @param user - the user to add
+     * @param topic - the topic to join
+     */
+    public void registerUserTo(UserEntry user, TopicEntry topic)
     {
-        TopicEntry template = new TopicEntry();
-        template.setTitle(topic.getTitle());
+        DummyUserInTopic userInTopic =
+                new DummyUserInTopic(topic, user);
+
         try
         {
-            TopicEntry titlesMatch = (TopicEntry)
-                    space.readIfExists(template, transaction, 3000);
-
-            template = new TopicEntry(); // reset template
-            template.setID(topic.getID());
-            TopicEntry idsMatch = (TopicEntry)
-                    space.readIfExists(template, transaction, 3000);
-
-            if(idsMatch == null ||
-                    titlesMatch == null)
+            Transaction transaction = TransactionBuilder.getTransaction();
+            if(space.readIfExists(userInTopic, transaction, 3000) == null)
             {
-                return false;
+                // dummy user does not exist in space
+                space.write(userInTopic, transaction, Lease.FOREVER);
             }
+            transaction.commit();
         }
         catch(Exception e)
         {
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(null,
+                    "Failed to join " + user.getUsername() + " to " + topic.getTitle(),
+                    "Failure", JOptionPane.ERROR_MESSAGE);
+
             System.err.println("Error: " + e.getMessage());
+            e.getMessage();
         }
-        return true;
+    }
+
+
+    // Deletion
+
+    /**
+     * Deletes a TopicEntry checking if the user requesting deletion owns it
+     * if they do not, notifies the user they cannot delete it.
+     *
+     * @param topic
+     * @param user
+     */
+    public void delete(TopicEntry topic, UserEntry user)
+    {
+        if(topic.getOwner().equals(user))
+        {
+            // the user is the topic owner
+            if(topic.getID() != null &&
+                    topic.getOwner()!= null &&
+                    topic.getTitle() != null)
+            {
+                try
+                {
+                    Transaction transaction =
+                            TransactionBuilder.getTransaction();
+
+                    space.takeIfExists(topic, transaction, 3000);
+
+                    // delete all users in topic
+                    removeAllFromTopic(topic, transaction);
+
+                    // delete all posts
+                    postUtils.deleteAllPosts(topic, transaction);
+
+                    transaction.commit();
+
+                }
+                catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+
+    // Getters
+
+    /**
+     * Get all posts for a specific user in a specific topic
+     *
+     * @param topic - topic to search
+     * @param user - user to find posts for
+     * @return a list of all the users posts
+     */
+    public List<PostEntry> getAllPostsForUserInTopic(TopicEntry topic, UserEntry user)
+    {
+        List<PostEntry> postCollection =
+                e_searcher.readAllMatchingEntries(space, new PostEntry(topic));
+
+        Iterator<PostEntry> i = postCollection.iterator();
+
+        while(i.hasNext())
+        {
+            PostEntry post = i.next();
+            if(post.getRecipient() != null &&
+                    (!post.getRecipient().getUsername().equals(user.getUsername()) &&
+                            !post.getAuthor().getUsername().equals(user.getUsername())))
+            {
+                i.remove();
+            }
+        }
+        return postCollection;
     }
 
     /**
@@ -178,122 +248,8 @@ public class TopicUtils
         return template;
     }
 
-    public void delete(TopicEntry topic, UserEntry user)
-    {
-        if(topic.getOwner().equals(user))
-        {
-            // the user is the topic owner
-            if(topic.getID() != null &&
-                    topic.getOwner()!= null &&
-                    topic.getTitle() != null)
-            {
-                try
-                {
-                    Transaction transaction =
-                            TransactionBuilder.getTransaction();
 
-                    space.takeIfExists(topic, transaction, 3000);
-
-                    // delete all users in topic
-                    removeAllFromTopic(topic, transaction);
-
-                    // delete all posts
-                    postUtils.deleteAllPosts(topic, transaction);
-
-                    transaction.commit();
-
-                }
-                catch (Exception e)
-                {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
-
-    /**
-     * Get all posts for a specific user in a specific topic
-     *
-     * @param topic - topic to search
-     * @param user - user to find posts for
-     * @return a list of all the users posts
-     */
-    public List<PostEntry> getAllPostsForUserInTopic(TopicEntry topic, UserEntry user)
-    {
-        List<PostEntry> postCollection =
-                e_searcher.readAllMatchingEntries(space, new PostEntry(topic));
-
-        Iterator<PostEntry> i = postCollection.iterator();
-
-        while(i.hasNext())
-        {
-            PostEntry post = i.next();
-            if(post.getRecipient() != null &&
-                    (!post.getRecipient().getUsername().equals(user.getUsername()) &&
-                            !post.getAuthor().getUsername().equals(user.getUsername())))
-            {
-                i.remove();
-            }
-        }
-        return postCollection;
-    }
-
-    /**
-     * Removes all users from a topic
-     *
-     * @param topic - the topic to remove from
-     * @param transaction - the transaction to use
-     *
-     * @Reference JavaSpaces: Prinicples
-     */
-    public void removeAllFromTopic(TopicEntry topic, Transaction transaction)
-    {
-        DummyUserInTopic template = new DummyUserInTopic();
-
-        try
-        {
-            while(space.readIfExists(template, transaction, 3000) != null)
-            {
-                space.takeIfExists(template, transaction, 3000);
-            }
-        }
-        catch(Exception e)
-        {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Adds a user to a topic using the DummyUserInTopic model.
-     *
-     * @param user - the user to add
-     * @param topic - the topic to join
-     */
-    public void registerUserTo(UserEntry user, TopicEntry topic)
-    {
-        DummyUserInTopic userInTopic =
-                new DummyUserInTopic(topic, user);
-
-        try
-        {
-            Transaction transaction = TransactionBuilder.getTransaction();
-            if(space.readIfExists(userInTopic, transaction, 3000) == null)
-            {
-                // dummy user does not exist in space
-                space.write(userInTopic, transaction, Lease.FOREVER);
-            }
-            transaction.commit();
-        }
-        catch(Exception e)
-        {
-            JOptionPane.showMessageDialog(null,
-                    "Failed to join " + user.getUsername() + " to " + topic.getTitle(),
-                    "Failure", JOptionPane.ERROR_MESSAGE);
-
-            System.err.println("Error: " + e.getMessage());
-            e.getMessage();
-        }
-    }
+    // Removal Methods
 
     /**
      * Removes a user from a topic safely and iteratively
@@ -325,7 +281,7 @@ public class TopicUtils
                         new DummyUserRemoved(template.getUser(),
                                 template.getTopic());
 
-                // write template to space for notifs (3min)
+                // write template to space for listener (3min)
                 space.write(removedUser, transaction, 3000*60);
             }
             transaction.commit();
@@ -335,6 +291,34 @@ public class TopicUtils
             e.printStackTrace();
         }
     }
+
+    /**
+     * Removes all users from a topic
+     *
+     * @param topic - the topic to remove from
+     * @param transaction - the transaction to use
+     *
+     * @Reference JavaSpaces: Prinicples
+     */
+    public void removeAllFromTopic(TopicEntry topic, Transaction transaction)
+    {
+        DummyUserInTopic template = new DummyUserInTopic();
+
+        try
+        {
+            while(space.readIfExists(template, transaction, 3000) != null)
+            {
+                space.takeIfExists(template, transaction, 3000);
+            }
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+
+    // Getters
 
     /**
      * Get a list of all the users currently in a topic
@@ -348,6 +332,60 @@ public class TopicUtils
         return e_searcher.readAllMatchingEntries(space, new DummyUserInTopic(topic));
     }
 
+
+    // Utility Methods
+
+    /**
+     * Checks whether or nto a TopicEntry exists in the space.
+     *
+     * @param topic - the topic to find
+     * @param transaction - the transaction to utilise
+     *
+     * @return <code>true</code> if exists, else <code>false</code>
+     */
+    public boolean topicExists(TopicEntry topic, Transaction transaction)
+    {
+        TopicEntry template = new TopicEntry();
+        template.setTitle(topic.getTitle());
+        try
+        {
+            TopicEntry titlesMatch = (TopicEntry)
+                    space.readIfExists(template, transaction, 3000);
+
+            template = new TopicEntry(); // reset template
+            template.setID(topic.getID());
+
+            TopicEntry idsMatch = (TopicEntry)
+                    space.readIfExists(template, transaction, 3000);
+
+            if(idsMatch == null ||
+                    titlesMatch == null)
+            {
+                return false;
+            }
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+            System.err.println("Error: " + e.getMessage());
+        }
+        return true;
+    }
+
+
+    // Test Methods
+
+    /**
+     * Adds a topic to the space for three minutes
+     * for testing purposes
+     *
+     * @param topic - topic to add
+     * @return <code>true</code> if successful, else <code>false</code>
+     * @throws RemoteException
+     * @throws TransactionException
+     */
+    public Lease addTestTopic(TopicEntry topic) throws RemoteException, TransactionException
+    {int THREE_MINUTES = 1000*3; return space.write(topic, null, THREE_MINUTES);}
 
 
 }

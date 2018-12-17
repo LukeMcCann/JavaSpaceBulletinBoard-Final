@@ -37,8 +37,7 @@ public class TopicEntry implements Entry
     public void removeSpecialChars(String title)
     {
         this.noSpecialTitle =
-                title.replaceAll(
-                        "\"[^a-zA-Z]+", "").toLowerCase();
+                title.replaceAll("[^a-zA-Z0-9]", "").toLowerCase();
     }
 
     // Getters and Setters (Convenience Methods)

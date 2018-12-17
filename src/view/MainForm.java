@@ -3,18 +3,12 @@ package view;
 import controller.MenuController;
 import model.TopicEntry;
 import model.UserEntry;
-import org.w3c.dom.html.HTMLObjectElement;
 import util.TopicUtils;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.event.TableModelListener;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.UUID;
 
 public class MainForm extends JFrame
 {
@@ -27,21 +21,23 @@ public class MainForm extends JFrame
     private JButton btn_refresh;
     private JButton btn_logout;
     private JButton btn_create;
+    private JButton btn_mark;
 
     private UserEntry user;
     private MenuController controller;
     private DefaultTableModel topicsModel;
+    private DefaultTableModel notifModel;
+
     private TopicUtils topicUtils = TopicUtils.getTopicUtils();
     private static final int OWNER_INDEX = 2;
     private static final int TOPIC_INDEX = 3;
     private int selectedIndex;
-    private static DefaultTableCellRenderer dtcr;
-
 
     public MainForm(UserEntry user)
     {
         this.user = user;
         init();
+        new NotifForm(user, controller, controller.createNotifModel());
     }
 
     private void makeCellsUneditable(JTable table)
@@ -55,7 +51,7 @@ public class MainForm extends JFrame
 
     private void init()
     {
-        controller = new MenuController(this, user);
+        controller = new MenuController(MainForm.this, user);
         getContentPane().add(pnl_main);
 
         topicsModel = controller.createTopicModel();
@@ -75,6 +71,17 @@ public class MainForm extends JFrame
 
         pack();
         setVisible(true);
+    }
+
+    public String getSelectedTopic()
+    {
+        String selectedTopic = null;
+        int selectedIndex = tbl_topicList.getSelectedRow();
+        if(selectedIndex != -1)
+        {
+            selectedTopic = tbl_topicList.getValueAt(selectedIndex, 0).toString();
+        }
+        return selectedTopic;
     }
 
     private void listen()
@@ -225,7 +232,7 @@ public class MainForm extends JFrame
 //                    System.out.println(topicsModel.getValueAt(selectedIndex, 0));
 //                    System.out.println(topicsModel.getValueAt(selectedIndex, 0));
                     if(tbl_topicList.getModel().getValueAt(
-                            selectedIndex, OWNER_INDEX).equals(user.getID()))
+                            selectedIndex, 1).equals(user.getUsername()))
                     {
                         btn_delete.setEnabled(true);
                     }
@@ -242,5 +249,22 @@ public class MainForm extends JFrame
             }
         });
 
+        btn_logout.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent)
+            {
+                controller.logout();
+            }
+        });
+
+        btn_mark.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent)
+            {
+                controller.markButtonPress(getSelectedTopic());
+                new NotifForm(user, controller, controller.createNotifModel());
+            }
+        });
     }
 }

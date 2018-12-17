@@ -1,21 +1,17 @@
 package view;
 
-import controller.MenuController;
 import controller.TopicController;
 import model.TopicEntry;
 import model.UserEntry;
 import org.apache.commons.lang3.StringUtils;
-import util.UserUtils;
 import util.helper.CellWrapRenderer;
 import util.helper.SpaceSearcher;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.BadLocationException;
-import javax.swing.text.DocumentFilter;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 

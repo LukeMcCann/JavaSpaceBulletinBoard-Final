@@ -1,36 +1,48 @@
-package util.notifs;
+package util.listener;
 
 import controller.TopicController;
+import model.DummyTopicDeleted;
 import model.DummyUserInTopic;
-import model.TopicEntry;
 import model.UserEntry;
 import net.jini.core.event.RemoteEvent;
 import net.jini.core.event.RemoteEventListener;
 import net.jini.core.event.UnknownEventException;
 import net.jini.space.AvailabilityEvent;
 
+import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.rmi.RemoteException;
-import java.util.UUID;
 
 /**
+ * @Author Luke McCann
+ * @UniversityNumber U1364096
+ * @University The University of Huddersfield
  *
  * @Reference JavaSpaces: Principles and Practice
+ *            David Gelertner
+ *
+ *            Java Distributed Systems:
+ *            Marko Boger
+ *
+ * UserAddedListener -
+ *             Listener class for RemoteEvents regarding users joining topics.
  */
-public class UserAddedNotif implements RemoteEventListener
+public class UserAddedListener implements RemoteEventListener
 {
     private TopicController controller;
+    private JFrame frame;
 
-    private UserAddedNotif(TopicController controller)
+    public UserAddedListener(TopicController controller)
     {
         super();
         this.controller = controller;
+//        this.frame = frame;
     }
 
     /**
-     * Listen for user being added,
+     * Listen for user being added to topic.
      *
-     * @param event - the event to occur
+     * @param event - the event to listen for.
      * @throws UnknownEventException
      * @throws RemoteException
      */
@@ -39,6 +51,7 @@ public class UserAddedNotif implements RemoteEventListener
     {
         try
         {
+            // get the user that triggered event
             AvailabilityEvent avt = (AvailabilityEvent) event;
             DummyUserInTopic userInTopic = (DummyUserInTopic) avt.getEntry();
             UserEntry user = userInTopic.getUser();
@@ -46,16 +59,22 @@ public class UserAddedNotif implements RemoteEventListener
             // add user to list
             if (!inUserList(user))
             {
-                Object[] columns = { user.getUsername(), user.getID() };
+                Object[] columns = {
+                        user.getUsername(), user.getID()
+                };
 
                 controller.getUserListModel().addRow(columns);
             }
         }
-        catch (Exception e)
+        catch (Exception  e)
         {
+            System.err.println("Error: " + e.getMessage());
             e.printStackTrace();
         }
     }
+
+
+    // Utility Methods
 
     /**
      * Checks if the user is currently in the topic list
@@ -67,16 +86,15 @@ public class UserAddedNotif implements RemoteEventListener
     private boolean inUserList(UserEntry user)
     {
         DefaultTableModel userModel = controller.getUserListModel();
-        boolean inList = false;
         try
         {
             for (int i = 0; i < userModel.getRowCount(); i++)
             {
-                UUID idInTable = (UUID) userModel.getValueAt(i, 1);
+                String inTable = (String) userModel.getValueAt(i, 0);
 
-                if (!idInTable.equals(user.getID()))
+                if (!inTable.equals(user.getUsername()))
                 {
-                    return inList;
+                    return false;
                 }
             }
         }
@@ -84,6 +102,6 @@ public class UserAddedNotif implements RemoteEventListener
         {
             e.printStackTrace();
         }
-        return inList = true;
+        return true;
     }
 }

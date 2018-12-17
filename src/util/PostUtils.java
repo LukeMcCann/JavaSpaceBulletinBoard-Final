@@ -11,10 +11,17 @@ import util.helper.EntrySearcher;
 import util.helper.TransactionBuilder;
 
 import javax.swing.*;
-import java.awt.*;
 import java.util.Iterator;
 import java.util.List;
 
+/**
+ * @Author Luke McCann
+ * @UniversityNumber U1364096
+ * @University The University of Huddersfield
+ *
+ * PostUtils -
+ *        Utility class for handling post-specific logic
+ */
 public class PostUtils
 {
     private static PostUtils postUtils;
@@ -30,6 +37,15 @@ public class PostUtils
         return postUtils = new PostUtils();
     }
 
+
+    // Posting
+
+    /**
+     * Handles the sending of public messages
+     *
+     * @param post - the post to write to space
+     * @return null if unsuccessful
+     */
     public Lease sendPublicMessage(PostEntry post)
     {
         Lease success = null;
@@ -71,6 +87,12 @@ public class PostUtils
         return success;
     }
 
+    /**
+     * Handles the sending of private messages
+     *
+     * @param post - the post to write to space
+     * @return null if unsuccessful
+     */
     public Lease sendPrivateMessage(PostEntry post)
     {
         Lease success = null;
@@ -106,6 +128,9 @@ public class PostUtils
         }
         return success;
     }
+
+
+    // Getters
 
     /**
      * Gets all posts a user has made in the current topic
@@ -143,6 +168,45 @@ public class PostUtils
     }
 
     /**
+     * Retrieves all of the private posts for a specified user
+     * Checks if the User is either the recipient or author
+     * Removes all public messages.
+     *
+     * @param author - the user to get posts for
+     * @param topic - the topic the user is in
+     *
+     * @return a list of all privateUserPosts
+     */
+    public List<PostEntry> getPrivatePostsForUser(UserEntry author, TopicEntry topic)
+    {
+        PostEntry post = new PostEntry(topic);
+
+        List<PostEntry> postCollection =
+                e_searcher.readAllMatchingEntries(space, post);
+
+        if(postCollection == null || postCollection.size() <= 0) JOptionPane.showMessageDialog(null,
+                "No private messages.");
+
+        Iterator<PostEntry> i = postCollection.iterator();
+
+        while(i.hasNext())
+        {
+            post = i.next();
+            if(post.getRecipient() == null ||
+                    (!post.getRecipient().getUsername().equals(author.username) &&
+                    !post.getAuthor().getUsername().equals(author.getUsername())))
+            {
+                // post is either public or not users
+                i.remove();
+            }
+        }
+        return postCollection;
+    }
+
+
+    // Deletion
+
+    /**
      * Delete all posts for a topic
      *
      * @param topic
@@ -160,36 +224,5 @@ public class PostUtils
         {
             e.printStackTrace();
         }
-    }
-
-    public List<PostEntry> getPrivatePostsForUser(UserEntry author, TopicEntry topic)
-    {
-        PostEntry post = new PostEntry(topic);
-
-        List<PostEntry> postCollection =
-                e_searcher.readAllMatchingEntries(space, post);
-
-        if(postCollection == null || postCollection.size() <= 0) JOptionPane.showMessageDialog(null,
-                "No private messages.");
-
-        Iterator<PostEntry> i = postCollection.iterator();
-
-        while(i.hasNext())
-        {
-            post = i.next();
-            if(post.getRecipient() == null)
-            {
-                // post is either public or not users
-                i.remove();
-
-                if(!post.getRecipient().getUsername().equals(author.username) &&
-                        !post.getAuthor().getUsername().equals(author.getUsername()))
-                {
-                    // post is not users
-                    i.remove();
-                }
-            }
-        }
-        return postCollection;
     }
 }

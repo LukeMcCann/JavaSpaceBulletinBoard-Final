@@ -2,33 +2,43 @@ package util.security;
 
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.security.spec.InvalidKeySpecException;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.Random;
 
 /**
+ * @Author Luke McCann
+ * @UniversityNumber U1364096
+ * @University The University of Huddersfield
  *
  * @References https://www.baeldung.com/java-password-hashing
  *             https://stackoverflow.com/questions/
  *             2860943/how-can-i-hash-a-password-in-java
+ *
+ * CipherUtils -
+ *         Class containing all logic for hashing secure passwords
  */
 public class CipherUtils
 {
+
+    private static final int KEY_LENGTH = 256;
+    private static final int ITERATIONS = 15000;
     private static final Random RANDOM = new SecureRandom();
+
+    // the algorithm to hashh with
+    private static final String ALGORITHM =
+            "PBKDF2WithHmacSHA512";
+
+    // the characters to select from
     private static final String CHARS =
             "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-    private static final int KEYLENGTH = 256;
-    private static final int ITERATIONS = 15000;
-    private static final String ALGORITHM = "PBKDF2WithHmacSHA512";
 
     private  CipherUtils() {}
 
     /**
      * Calculates a salt value - one way cryptographic funciton
+     * this needs to be stored in the UserEntry for decryption
      *
      * @param length - length of salt to generate
      * @return returnVal - the calculated salt
@@ -46,16 +56,17 @@ public class CipherUtils
     }
 
     /**
-     *Generate password hash using salt
+     * Generate password hash using salt.
      *
      * @param password - the password to be hashed
      * @param salt - the salt to hash the password
-     * @return the encoded password
+     *
+     * @return the encrypted password
      */
     public static byte[] hash(char[] password, byte[] salt)
     {
         PBEKeySpec pb_spec = new PBEKeySpec(
-                password, salt, ITERATIONS, KEYLENGTH);
+                password, salt, ITERATIONS, KEY_LENGTH);
 
         Arrays.fill(password, Character.MIN_VALUE);
         try
@@ -81,6 +92,7 @@ public class CipherUtils
      *
      * @param password - password to be secured.
      * @param salt - the salt to generate
+     *
      * @return the hashed password
      */
     public static String generateSecurePassword(String password, String salt)
@@ -100,6 +112,9 @@ public class CipherUtils
         }
         return returnString;
     }
+
+
+    // Verification
 
     /**
      *

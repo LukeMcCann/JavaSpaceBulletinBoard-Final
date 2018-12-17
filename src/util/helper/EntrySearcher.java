@@ -9,19 +9,27 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * @Author Luke McCann
+ * @UniversityNumber U1364096
+ * @University The University of Huddersfield
  *
- * @References https://docs.oracle.com/
- *              javase/tutorial/extra/generics/methods.html
+ * @References javase/tutorial/extra/generics/methods.html
  *
- *              https://river.apache.org/release-doc/3.0.0/api/net/
- *              jini/space/JavaSpace05.html
+ *             https://river.apache.org/release-doc/3.0.0/api/net/
+ *             jini/space/JavaSpace05.html
+ *
+ * EntrySearcher -
+ *            Contains logic for searching the space for existing entries.
  */
 public class EntrySearcher
 {
+    // No arg constructor
     public EntrySearcher() {}
 
+    // Read Methods - these methods retrieve a copy from the space.
+
     /**
-     * Reads all entries that match the template in a space
+     * Reads all entries that match the provided template in a space.
      *
      * Utilises JavaSpace05 contents() method
      *
@@ -61,6 +69,7 @@ public class EntrySearcher
 //
             // while this solution works, it is improved by newer implementation
             // which uses less repetitive transaction building.
+            // the code remains as there may be a better way of doing this
 //            try
 //            {
 //                transaction.commit();
@@ -119,8 +128,11 @@ public class EntrySearcher
         return entryCollection;
     }
 
+
+    // Take Methods - these methods take object from the space.
+
     /**
-     * Takes all entries from the space that match the template
+     * Takes all entries from the space that match the template.
      *
      * @param space - space to search
      * @param transaction - the transaction use
