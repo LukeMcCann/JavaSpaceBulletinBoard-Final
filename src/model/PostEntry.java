@@ -23,6 +23,10 @@ public class PostEntry implements Entry
 
     public PostEntry(TopicEntry topic) {this.topic = topic;}
 
+    public PostEntry(UserEntry author, TopicEntry topic) {this.author = author; this.topic = topic;}
+
+    public PostEntry(UserEntry author, UserEntry recipient, TopicEntry topic) {this.author = author;this.recipient = recipient;this.topic = topic;}
+
     public PostEntry(UserEntry author, TopicEntry topic, String content)
     {
         this.topic = topic;

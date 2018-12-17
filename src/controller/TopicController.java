@@ -25,6 +25,7 @@ public class TopicController
 
     private List<PostEntry> directMessageList;
     private DefaultTableModel postListModel;
+    private DefaultTableModel privateListModel;
     private DefaultTableModel userListModel;
 
     public TopicController(TopicForm form, UserEntry user, TopicEntry topic)
@@ -93,20 +94,11 @@ public class TopicController
 
     }
 
-    /**
-     * Creates the data model for postList which is shown to the user.
-     * It filters out any posts the user is unauthorised to see.
-     *
-     * @return The finished table model.
-     *
-     * @Reference https://docs.oracle.com/
-     *              javase/tutorial/uiswing/components/table.html
-     */
     public DefaultTableModel createPostsModel()
     {
         Object[] columns =
                 {
-                "TimeStamp", "User",
+                        "TimeStamp", "User",
                         "Post", "Post_ID"
                 };
 
@@ -121,7 +113,7 @@ public class TopicController
             if(post.getRecipient() != null)
             {
                 // there is a recipient, message is private
-                directMessageList.add(post);
+                postCollection.remove(i);
             }
         }
 
@@ -147,6 +139,52 @@ public class TopicController
         return postListModel;
     }
 
+
+    public DefaultTableModel createPrivatePostsModel()
+    {
+        Object[] columns =
+                {
+                        "TimeStamp", "TO",
+                        "FROM", "Message"
+                };
+
+        List<PostEntry> postCollection =
+                postUtils.getAllUsersPosts(user, topic);
+
+        // iterate over list
+        for(int i = 0; i < postCollection.size(); i++)
+        {
+            PostEntry post = postCollection.get(i);
+
+            if(post.getRecipient() == null)
+            {
+                // there is a recipient, message is public
+                postCollection.remove(i);
+            }
+        }
+
+        // create multidimensional array
+        Object[][] content = {};
+
+        if(postCollection != null && postCollection.size() > 0)
+        {
+            content = new Object[postCollection.size()][4];
+
+            for(int i = 0; i < postCollection.size(); i++)
+            {
+                PostEntry post = postCollection.get(i);
+                post.generateTimeStamp();
+
+                content[i][0] = post.getPostedAt();
+                content[i][1] = post.getRecipient().getUsername();
+                content[i][2] = post.getAuthor().getUsername();
+                content[i][3] = post.getContent();
+            }
+        }
+        privateListModel = new DefaultTableModel(content, columns);
+        return privateListModel;
+    }
+
     /**
      * Safely removes entries
      */
@@ -170,20 +208,14 @@ public class TopicController
         return directMessageList;
     }
 
-
-
-    // While similar the following work more effectively in this way
-    public void refreshUserModel(DefaultTableModel model, JTable table, int columnToRemove)
+    public void refresh(JTable postTable, JTable userTable)
     {
         userListModel = createUsersModel();
-        table.setModel(userListModel);
-        table.removeColumn(table.getColumnModel().getColumn(columnToRemove));
-    }
+        userTable.setModel(userListModel);
+        userTable.removeColumn(userTable.getColumnModel().getColumn(1));
 
-    public void refreshPostModel(DefaultTableModel model, JTable table, int columnToRemove)
-    {
         postListModel = createUsersModel();
-        table.setModel(postListModel);
-        table.removeColumn(table.getColumnModel().getColumn(columnToRemove));
+        postTable.setModel(postListModel);
+        postTable.removeColumn(postTable.getColumnModel().getColumn(3));
     }
 }
