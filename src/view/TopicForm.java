@@ -38,7 +38,6 @@ public class TopicForm extends JFrame
 
     private DefaultTableModel postListModel;
     private DefaultTableModel usersListModel;
-    private DefaultTableModel privateListModel;
 
     private SpaceSearcher sp_searcher = SpaceSearcher.getSpaceSearcher();
     private UserEntry selectedUser;
@@ -63,7 +62,6 @@ public class TopicForm extends JFrame
         setVisible(true);
 
         listen();
-
     }
 
     private void postListSetup()
@@ -82,22 +80,6 @@ public class TopicForm extends JFrame
         tbl_postList.getColumnModel().getColumn(2).setCellRenderer(new CellWrapRenderer());
     }
 
-    private void privateListSetup()
-    {
-        privateListModel = controller.createPrivatePostsModel();
-        tbl_privatePosts.setModel(privateListModel);
-        tbl_privatePosts.removeColumn(tbl_privatePosts.getColumnModel().getColumn(3));
-        tbl_privatePosts.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-
-        makeTableUneditable(tbl_privatePosts.);
-
-        tbl_privatePosts.getColumnModel().getColumn(0).setPreferredWidth(170);
-        tbl_privatePosts.getColumnModel().getColumn(1).setPreferredWidth(170);
-        tbl_privatePosts.getColumnModel().getColumn(2).setPreferredWidth(169);
-
-        tbl_privatePosts.getColumnModel().getColumn(2).setCellRenderer(new CellWrapRenderer());
-    }
-
     private void userListSetup()
     {
         usersListModel = controller.createUsersModel();
@@ -107,9 +89,11 @@ public class TopicForm extends JFrame
         tbl_userList.getColumnModel().getColumn(0).setPreferredWidth(450);
     }
 
-    public void refresh()
+    private void refresh()
     {
         controller.refresh(tbl_postList, tbl_userList);
+        postListSetup();
+        userListSetup();
     }
 
     @Override
@@ -195,6 +179,7 @@ public class TopicForm extends JFrame
             {
                 String message = ta_message.getText();
                 controller.sendButtonPress(message, user, getSelectedUser(), topic);
+
                 refresh();
             }
         });
@@ -258,6 +243,7 @@ public class TopicForm extends JFrame
                 {
                     ta_message.setText(null);
                 }
+                refresh();
             }
 
 
@@ -275,7 +261,7 @@ public class TopicForm extends JFrame
             }
         });
 
-        pnl_main.addMouseListener(new MouseListener() {
+        tbl_postList.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent mouseEvent) {
 
