@@ -235,6 +235,13 @@ public class TopicController
 
 
 
+
+    // Convenience methods
+    public DefaultTableModel getUserListModel()
+    {
+        return userListModel;
+    }
+
     // While similar the following work more effectively in this way
     public void refresh(JTable post, JTable user)
     {
