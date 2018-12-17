@@ -27,7 +27,7 @@ public class TopicForm extends JFrame
     private JTextArea ta_message;
     private JPanel pnl_buttons;
     private JButton btn_send;
-    private JButton btn_leave;
+    private JButton btn_secret;
     private JTable tbl_postList;
     private JScrollPane srcl_ustList;
 
@@ -62,13 +62,26 @@ public class TopicForm extends JFrame
         setVisible(true);
 
         listen();
+        btn_secret.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                if(getSelectedUser() == null)
+                {
+                    JOptionPane.showMessageDialog(TopicForm.this,
+                            "Please select a user!");
+                }
+                else
+                {
+                    new SecretChatForm(user, getSelectedUser(), topic, controller);
+                }
+            }
+        });
     }
 
     private void postListSetup()
     {
         postListModel = controller.createPostsModel();
         tbl_postList.setModel(postListModel);
-        tbl_postList.removeColumn(tbl_postList.getColumnModel().getColumn(3));
         tbl_postList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
         makeTableUneditable(tbl_postList);
@@ -84,7 +97,6 @@ public class TopicForm extends JFrame
     {
         usersListModel = controller.createUsersModel();
         tbl_userList.setModel(usersListModel);
-        tbl_userList.removeColumn(tbl_userList.getColumnModel().getColumn(1));
         tbl_userList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         tbl_userList.getColumnModel().getColumn(0).setPreferredWidth(450);
     }
@@ -120,7 +132,6 @@ public class TopicForm extends JFrame
 
     private void setRules()
     {
-        ta_message.setWrapStyleWord(true);
         tbl_postList.setShowHorizontalLines(true);
         tbl_postList.setShowVerticalLines(true);
         tbl_postList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -184,7 +195,7 @@ public class TopicForm extends JFrame
             }
         });
         /**
-         * Limits the character count for messages to 50.
+         * Limits the character count for messages.
          */
         ta_message.addKeyListener(new KeyAdapter()
         {
@@ -227,7 +238,6 @@ public class TopicForm extends JFrame
                     {
                         previousSelectedUser = selectedUser;
                         selectedUser = null;
-                        tbl_userList.getSelectionModel().clearSelection();
                     }
                 }
             }
@@ -306,7 +316,6 @@ public class TopicForm extends JFrame
                         ta_message.getDocument().insertString(0, "TO: " +
                                 selectedUser.getUsername() +" ; \n", null);
 
-                        tbl_userList.getSelectionModel().clearSelection();
                     }
                     catch (BadLocationException be)
                     {

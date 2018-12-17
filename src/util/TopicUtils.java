@@ -344,4 +344,5 @@ public class TopicUtils
         return e_searcher.readAllMatchingEntries(space, new DummyUserInTopic(topic));
     }
 
+
 }

@@ -1,5 +1,6 @@
 package util;
 
+import model.DummyUserInTopic;
 import model.PostEntry;
 import model.TopicEntry;
 import model.UserEntry;
@@ -10,6 +11,7 @@ import util.helper.EntrySearcher;
 import util.helper.TransactionBuilder;
 
 import javax.swing.*;
+import java.awt.*;
 import java.util.Iterator;
 import java.util.List;
 
@@ -69,10 +71,41 @@ public class PostUtils
         return success;
     }
 
-//    public Lease sendPrivateMessage(PostEntry post, UserEntry recipient)
-//    {
-//
-//    }
+    public Lease sendPrivateMessage(PostEntry post)
+    {
+        Lease success = null;
+        if(post.getRecipient() == null)
+        {
+            JOptionPane.showMessageDialog(null, "Recipient unavailable!");
+        }
+
+        Transaction transaction = TransactionBuilder.getTransaction();
+        // Check user in topic
+        try
+        {
+            DummyUserInTopic template = new DummyUserInTopic();
+            template.setTopic(post.getTopic());
+            template.setUser(post.getRecipient());
+            DummyUserInTopic userInTopic = (DummyUserInTopic)
+                    space.readIfExists(template, transaction, 3000);
+
+            if(userInTopic != null)
+            {
+                success = space.write(post, transaction, Lease.FOREVER);
+                transaction.commit();
+            }
+            else
+             {
+                JOptionPane.showMessageDialog(null,
+                        "User no longer in topic.");
+             }
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return success;
+    }
 
     /**
      * Gets all posts a user has made in the current topic
@@ -104,6 +137,34 @@ public class PostUtils
             {
                 // post is private
                 i.remove();
+            }
+        }
+        return postCollection;
+    }
+
+    public List<PostEntry> getPrivatePostsForUser(UserEntry author, TopicEntry topic)
+    {
+        PostEntry post = new PostEntry(topic);
+
+        List<PostEntry> postCollection =
+                e_searcher.readAllMatchingEntries(space, post);
+
+        Iterator<PostEntry> i = postCollection.iterator();
+
+        while(i.hasNext())
+        {
+            post = i.next();
+            if(post.getRecipient() == null)
+            {
+                // post is either public or not users
+                i.remove();
+
+                if(!post.getRecipient().getUsername().equals(author.username) &&
+                        !post.getAuthor().getUsername().equals(author.getUsername()))
+                {
+                    // post is not users
+                    i.remove();
+                }
             }
         }
         return postCollection;

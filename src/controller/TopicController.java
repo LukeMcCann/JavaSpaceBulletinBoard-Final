@@ -26,6 +26,7 @@ public class TopicController
     private List<PostEntry> directMessageList;
     private DefaultTableModel postListModel;
     private DefaultTableModel userListModel;
+    private DefaultTableModel privateListModel;
 
     public TopicController(TopicForm form, UserEntry user, TopicEntry topic)
     {
@@ -48,13 +49,34 @@ public class TopicController
             }
             else
             {
-                // postUtils.sendPrivateMessage(new PostEntry(author, recipient, topic, content);
+                postUtils.sendPrivateMessage(new PostEntry(author, recipient, topic, content));
             }
         }
         else
         {
             JOptionPane.showMessageDialog(null,
                     "Failed to send message!");
+        }
+    }
+
+    public void forcePrivateSend(UserEntry author, UserEntry recipient, TopicEntry topic, String content)
+    {
+        if(recipient == null)
+        {
+            JOptionPane.showMessageDialog(null,
+                    "No recipient!");
+        }
+        else
+        {
+            if(StringUtils.isNotBlank(content))
+            {
+                postUtils.sendPrivateMessage(new PostEntry(author, recipient, topic, content));
+            }
+            else
+            {
+                JOptionPane.showMessageDialog(null,
+                        "Please enter a message!");
+            }
         }
     }
 
@@ -70,7 +92,7 @@ public class TopicController
     {
         Object[] columns =
                 {
-                        "Username", "User_ID"
+                        "Username"
                 };
 
         List<DummyUserInTopic> userCollection =
@@ -80,16 +102,47 @@ public class TopicController
 
         if(userCollection != null && userCollection.size() > 0)
         {
-            content = new Object[userCollection.size()][2];
+            content = new Object[userCollection.size()][1];
 
             for(int i = 0; i < userCollection.size(); i++)
             {
                 content[i][0] = userCollection.get(i).getUser().getUsername();
-                content[i][1] = userCollection.get(i).getUser().getID();
             }
         }
         userListModel = new DefaultTableModel(content, columns);
         return userListModel;
+
+    }
+
+    public DefaultTableModel createPrivateChatModel()
+    {
+        Object[] columns =
+                {
+                        "TimeStamp", "TO", "FROM", "Message"
+                };
+
+        List<PostEntry> privatePostCollection =
+                postUtils.getPrivatePostsForUser(user, topic);
+
+        Object[][] content = {};
+
+        if(privatePostCollection != null && privatePostCollection.size() > 0)
+        {
+            content = new Object[privatePostCollection.size()][5];
+
+            for(int i = 0; i < privatePostCollection.size(); i++)
+            {
+                PostEntry post = privatePostCollection.get(i);
+                post.generateTimeStamp();
+
+                content[i][0] = privatePostCollection.get(i).getPostedAt();
+                content[i][1] = privatePostCollection.get(i).getAuthor().getUsername();
+                content[i][2] = privatePostCollection.get(i).getRecipient().getUsername();
+                content[i][3] = privatePostCollection.get(i).getContent();
+            }
+        }
+        privateListModel = new DefaultTableModel(content, columns);
+        return privateListModel;
 
     }
 
@@ -106,8 +159,7 @@ public class TopicController
     {
         Object[] columns =
                 {
-                "TimeStamp", "User",
-                        "Post", "Post_ID"
+                "TimeStamp", "User", "Post"
                 };
 
         List<PostEntry> postCollection =
@@ -121,7 +173,8 @@ public class TopicController
             if(post.getRecipient() != null)
             {
                 // there is a recipient, message is private
-                directMessageList.add(post);
+                postCollection.remove(i);
+//                directMessageList.add(post);
             }
         }
 
@@ -130,7 +183,7 @@ public class TopicController
 
         if(postCollection != null && postCollection.size() > 0)
         {
-            content = new Object[postCollection.size()][4];
+            content = new Object[postCollection.size()][3];
 
             for(int i = 0; i < postCollection.size(); i++)
             {
@@ -140,7 +193,6 @@ public class TopicController
                 content[i][0] = post.getPostedAt();
                 content[i][1] = post.getAuthor().getUsername();
                 content[i][2] = post.getContent();
-                content[i][3] = post.getID();
             }
         }
         postListModel = new DefaultTableModel(content, columns);
@@ -173,17 +225,12 @@ public class TopicController
 
 
     // While similar the following work more effectively in this way
-    public void refreshUserModel(DefaultTableModel model, JTable table, int columnToRemove)
-    {
-        userListModel = createUsersModel();
-        table.setModel(userListModel);
-        table.removeColumn(table.getColumnModel().getColumn(columnToRemove));
-    }
-
-    public void refreshPostModel(DefaultTableModel model, JTable table, int columnToRemove)
+    public void refresh(JTable post, JTable user)
     {
         postListModel = createUsersModel();
-        table.setModel(postListModel);
-        table.removeColumn(table.getColumnModel().getColumn(columnToRemove));
+        post.setModel(postListModel);
+
+        userListModel = createUsersModel();
+        user.setModel(userListModel);
     }
 }
