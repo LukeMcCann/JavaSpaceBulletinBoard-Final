@@ -222,6 +222,17 @@ public class TopicController
         return directMessageList;
     }
 
+    /**
+     * Hanldes user leaving topic
+     *
+     * @param user - User to leave
+     * @param topic - the topic to leave
+     */
+    public void leaveTopicPress(UserEntry user, TopicEntry topic)
+    {
+        topicUtils.removeUserFrom(user, topic);
+    }
+
 
 
     // While similar the following work more effectively in this way

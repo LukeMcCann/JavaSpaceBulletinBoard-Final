@@ -30,6 +30,7 @@ public class TopicForm extends JFrame
     private JButton btn_secret;
     private JTable tbl_postList;
     private JScrollPane srcl_ustList;
+    private JButton btn_leave;
 
     private UserEntry user;
     private TopicEntry topic;
@@ -74,6 +75,15 @@ public class TopicForm extends JFrame
                 {
                     new SecretChatForm(user, getSelectedUser(), topic, controller);
                 }
+            }
+        });
+        btn_leave.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent)
+            {
+                controller.leaveTopicPress(user, topic);
+                dispose();
             }
         });
     }

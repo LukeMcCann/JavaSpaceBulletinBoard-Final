@@ -1,9 +1,6 @@
 package util;
 
-import model.DummyUserInTopic;
-import model.DummyUserRemoved;
-import model.TopicEntry;
-import model.UserEntry;
+import model.*;
 import net.jini.core.lease.Lease;
 import net.jini.core.transaction.Transaction;
 import net.jini.core.transaction.TransactionException;
@@ -14,6 +11,7 @@ import util.helper.TransactionBuilder;
 
 import javax.swing.*;
 import java.rmi.RemoteException;
+import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
@@ -37,6 +35,7 @@ public class TopicUtils
     private SpaceSearcher searcher = SpaceSearcher.getSpaceSearcher();
     private EntrySearcher e_searcher = new EntrySearcher();
     private static TopicUtils topicUtils;
+    private static PostUtils postUtils = PostUtils.getPostUtils();
 
     private static final long DEFAULT_TOPIC_LEASE = Lease.FOREVER;
 
@@ -221,7 +220,8 @@ public class TopicUtils
                     // delete all users in topic
                     removeAllFromTopic(topic, transaction);
 
-                    // TODO: delete all posts
+                    // delete all posts
+                    postUtils.deleteAllPosts(topic, transaction);
 
                     transaction.commit();
 
@@ -232,6 +232,33 @@ public class TopicUtils
                 }
             }
         }
+    }
+
+    /**
+     * Get all posts for a specific user in a specific topic
+     *
+     * @param topic - topic to search
+     * @param user - user to find posts for
+     * @return a list of all the users posts
+     */
+    public List<PostEntry> getAllPostsForUserInTopic(TopicEntry topic, UserEntry user)
+    {
+        List<PostEntry> postCollection =
+                e_searcher.readAllMatchingEntries(space, new PostEntry(topic));
+
+        Iterator<PostEntry> i = postCollection.iterator();
+
+        while(i.hasNext())
+        {
+            PostEntry post = i.next();
+            if(post.getRecipient() != null &&
+                    (!post.getRecipient().getUsername().equals(user.getUsername()) &&
+                            !post.getAuthor().getUsername().equals(user.getUsername())))
+            {
+                i.remove();
+            }
+        }
+        return postCollection;
     }
 
     /**
@@ -343,6 +370,7 @@ public class TopicUtils
     {
         return e_searcher.readAllMatchingEntries(space, new DummyUserInTopic(topic));
     }
+
 
 
 }

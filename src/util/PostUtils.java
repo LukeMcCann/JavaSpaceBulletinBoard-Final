@@ -142,6 +142,26 @@ public class PostUtils
         return postCollection;
     }
 
+    /**
+     * Delete all posts for a topic
+     *
+     * @param topic
+     * @param transaction
+     */
+    public void deleteAllPosts(TopicEntry topic, Transaction transaction)
+    {
+        PostEntry template = new PostEntry();
+        template.setTopic(topic);
+        try
+        {
+            e_searcher.takeAllMatchingEntries(space, transaction, template);
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
     public List<PostEntry> getPrivatePostsForUser(UserEntry author, TopicEntry topic)
     {
         PostEntry post = new PostEntry(topic);

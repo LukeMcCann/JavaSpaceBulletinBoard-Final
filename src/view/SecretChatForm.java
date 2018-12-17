@@ -21,6 +21,7 @@ public class SecretChatForm extends JFrame
     private JPanel pnl_buttons;
     private JTextArea ta_chat;
     private JButton btn_send;
+    private JButton btn_history;
 
     private UserEntry user;
     private UserEntry otherUser;
