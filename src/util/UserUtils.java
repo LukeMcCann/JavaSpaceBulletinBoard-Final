@@ -107,9 +107,11 @@ public class UserUtils
      * Renews a users lease.
      *
      * @param user - the user whose lease to renew.
+     * @return null if fails - testing purposes
      */
-    public void renewUserLease(UserEntry user)
+    public Lease renewUserLease(UserEntry user)
     {
+        Lease success = null;
         if(user.getUsername() != null &&
                 user.getSecureUsername() != null)
         {
@@ -133,6 +135,7 @@ public class UserUtils
                 }
             }
         }
+        return success;
     }
 
 

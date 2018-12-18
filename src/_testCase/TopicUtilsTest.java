@@ -7,8 +7,14 @@ import model.UserEntry;
 import net.jini.core.lease.Lease;
 import net.jini.space.JavaSpace05;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.jboss.arquillian.container.test.api.Deployment;
+import org.jboss.arquillian.junit.Arquillian;
+import org.jboss.shrinkwrap.api.ShrinkWrap;
+import org.jboss.shrinkwrap.api.asset.EmptyAsset;
+import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import util.PostUtils;
 import util.SpaceUtils;
 import util.TopicUtils;
@@ -20,7 +26,6 @@ import static org.junit.Assert.*;
 
 public class TopicUtilsTest
 {
-
     private UserEntry user;
     private TopicEntry topic;
     private PostEntry post;
@@ -37,6 +42,7 @@ public class TopicUtilsTest
     @Before
     public void setup()
     {
+
         user = new UserEntry("$$$", "$$$");
         topic = new TopicEntry("$$$", user);
         post = new PostEntry(user, topic, "Test");
@@ -151,6 +157,14 @@ public class TopicUtilsTest
 
         try
         {
+            System.out.println("\n----------------------\n");
+            System.out.println("User: " + user1.getUsername());
+            System.out.println("User: " + user2.getUsername());
+            System.out.println("User: " + user3.getUsername());
+            System.out.println("User: " + user4.getUsername());
+            System.out.println("User: " + user5.getUsername());
+            System.out.println("User: " + user6.getUsername());
+
             testList.add(userUtils.createTestUser(user1));
             testList.add(userUtils.createTestUser(user2));
             testList.add(userUtils.createTestUser(user3));
