@@ -6,3 +6,7 @@ In order to run this applcation you must first install apache river via the abov
 
 @Author Luke McCann - U1364096 The Univeristy of Huddersfield
  Updated Project Repo - note this is not the original repository, ther are multiple private versions of this project
+ 
+ This App received some of the best feedback I have had from tutors. 
+ I intend to make some tutorials on JavaSpaces soon to assist those in the future
+ struggling with the lack of documentation as I did. 
